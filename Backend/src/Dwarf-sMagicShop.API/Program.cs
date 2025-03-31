@@ -24,7 +24,6 @@ Log.Logger = new LoggerConfiguration()
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSerilog();
-builder.Services.AddAuthorization();
 
 builder.Services
 	.AddApi()

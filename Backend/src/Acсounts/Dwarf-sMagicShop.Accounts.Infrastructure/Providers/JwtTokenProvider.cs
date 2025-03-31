@@ -6,7 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Dwarf_sMagicShop.Accounts.Infrastructure.TokenProviders;
+namespace Dwarf_sMagicShop.Accounts.Infrastructure.Providers;
 
 public class JwtTokenProvider : ITokenProvider
 {
@@ -23,7 +23,11 @@ public class JwtTokenProvider : ITokenProvider
 		var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key));
 		var creds = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-		Claim[] claims = [new Claim(SUBJECT, user.Id.ToString())];
+		Claim[] claims = 
+			[
+				new Claim(SUBJECT, user.Id.ToString()),
+				new Claim("Permission", "Crafter")
+			];
 
 		var token = new JwtSecurityToken(
 			jwtOptions.Issuer,
