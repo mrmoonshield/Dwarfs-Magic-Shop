@@ -1,0 +1,6 @@
+@Dwarf_sMagicShop.API_HostAddress = http://localhost:5062
+
+GET {{Dwarf_sMagicShop.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

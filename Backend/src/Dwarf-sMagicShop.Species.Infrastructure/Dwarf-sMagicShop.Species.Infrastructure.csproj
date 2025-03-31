@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Dwarf_sMagicShop.Species.Infrastructure</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Configurations\**" />
+    <EmbeddedResource Remove="Configurations\**" />
+    <None Remove="Configurations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dwarf-sMagicShop.Crafters.Infrastructure\Dwarf-sMagicShop.Crafters.Infrastructure.csproj" />
+    <ProjectReference Include="..\Dwarf-sMagicShop.Species.Application\Dwarf-sMagicShop.Species.Application.csproj" />
+  </ItemGroup>
+
+</Project>

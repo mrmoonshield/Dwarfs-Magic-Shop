@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Dwarf_sMagicShop.API</RootNamespace>
+    <UserSecretsId>8a34217c-5673-498c-9ec0-843cc5915f53</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+    <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
+    <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
+    <PackageReference Include="Serilog.Sinks.Http" Version="9.1.0" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="9.0.0" />
+    <PackageReference Include="Serilog.Sinks.Trace" Version="4.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Acсounts\Dwarf-sMagicShop.Accounts.Domain\Dwarf-sMagicShop.Accounts.Domain.csproj" />
+    <ProjectReference Include="..\Acсounts\Dwarf-sMagicShop.Accounts.Infrastructure\Dwarf-sMagicShop.Accounts.Infrastructure.csproj" />
+    <ProjectReference Include="..\Dwarf-sMagicShop.Crafters.Application\Dwarf-sMagicShop.Crafters.Application.csproj" />
+    <ProjectReference Include="..\Dwarf-sMagicShop.Crafters.Domain\Dwarf-sMagicShop.Crafters.Domain.csproj" />
+    <ProjectReference Include="..\Dwarf-sMagicShop.Crafters.Infrastructure\Dwarf-sMagicShop.Crafters.Infrastructure.csproj" />
+    <ProjectReference Include="..\Dwarf-sMagicShop.Shared\Dwarf-sMagicShop.Core.csproj" />
+    <ProjectReference Include="..\Dwarf-sMagicShop.Species.Application\Dwarf-sMagicShop.Species.Application.csproj" />
+    <ProjectReference Include="..\Dwarf-sMagicShop.Species.Domain\Dwarf-sMagicShop.Species.Domain.csproj" />
+    <ProjectReference Include="..\Dwarf-sMagicShop.Species.Infrastructure\Dwarf-sMagicShop.Species.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

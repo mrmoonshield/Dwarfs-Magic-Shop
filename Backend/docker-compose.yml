@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres
+    container_name: dwarf_s_magic_shop_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_password
+      POSTGRES_DB: postgres_db
+    ports:
+      - 5434:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+  seq:
+    image: datalust/seq:latest
+    container_name: seq
+    restart: always
+    ports:
+      - 5341:5341
+      - 8081:80
+    environment:
+      - ACCEPT_EULA=Y
+  minio:
+    image: minio/minio
+    container_name: minio
+    restart: always
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - minio_data:/data
+    command: server --console-address ":9001" /data
+
+volumes:
+  postgres-data:
+  minio_data:
