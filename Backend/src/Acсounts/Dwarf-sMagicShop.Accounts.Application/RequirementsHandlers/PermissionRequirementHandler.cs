@@ -1,20 +1,20 @@
-﻿using Dwarf_sMagicShop.Accounts.Domain.Requirements;
+﻿using Dwarf_sMagicShop.Accounts.Domain;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Dwarf_sMagicShop.Accounts.Application.RequirementsHandlers;
 
-public class PermissionRequirementHandler : AuthorizationHandler<PermissionRequirement>
+public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttribute>
 {
 	protected override async Task HandleRequirementAsync(
 		AuthorizationHandlerContext context,
-		PermissionRequirement requirement)
+		PermissionAttribute permission)
 	{
-		var permission = context.User.Claims.FirstOrDefault(a => a.Type == "Permission");
+		var claim = context.User.Claims.FirstOrDefault(a => a.Type == "Permission");
 
-		if (permission == null) return;
+		if (claim == null) return;
 
-		if (permission.Value == requirement.Code) 
-			context.Succeed(requirement);
+		if (claim.Value == permission.Code) 
+			context.Succeed(permission);
 
 		await Task.CompletedTask;
 	}

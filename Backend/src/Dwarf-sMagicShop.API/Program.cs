@@ -5,7 +5,6 @@ using Dwarf_sMagicShop.Crafters.Application;
 using Dwarf_sMagicShop.Crafters.Infrastructure;
 using Dwarf_sMagicShop.Species.Application;
 using Dwarf_sMagicShop.Species.Infrastructure;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Serilog;
 using Serilog.Events;
 

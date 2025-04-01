@@ -1,7 +1,6 @@
 ﻿using Dwarf_sMagicShop.Accounts.Application.Abstracts;
 using Dwarf_sMagicShop.Accounts.Application.RequirementsHandlers;
 using Dwarf_sMagicShop.Accounts.Domain.Models;
-using Dwarf_sMagicShop.Accounts.Domain.Requirements;
 using Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts;
 using Dwarf_sMagicShop.Accounts.Infrastructure.Providers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,8 +22,9 @@ public static class Inject
 			.AddScoped<AccountDbContext>()
 			.AddScoped<ITokenProvider, JwtTokenProvider>()
 			.AddIdentity()
-			.AddAutorizationService()
-			.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
+			.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>()
+			.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>()
+			.AddAuthorization();
 
 		return services;
 	}
@@ -74,22 +74,6 @@ public static class Inject
 					ValidateAudience = true,
 					ValidateIssuerSigningKey = true
 				};
-			});
-	}
-
-	private static IServiceCollection AddAutorizationService(this IServiceCollection services)
-	{
-		return services.AddAuthorization(options =>
-			{
-				//options.DefaultPolicy = new AuthorizationPolicyBuilder()
-				//	.RequireClaim("Role", "User")
-				//	.RequireAuthenticatedUser()
-				//	.Build();
-
-				options.AddPolicy("CreateCrafterRequirement", policy =>
-				{
-					policy.AddRequirements(new PermissionRequirement("Crafter"));
-				});
 			});
 	}
 }
