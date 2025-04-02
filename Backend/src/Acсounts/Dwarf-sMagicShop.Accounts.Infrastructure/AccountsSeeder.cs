@@ -18,7 +18,7 @@ public class AccountsSeeder(IServiceScopeFactory serviceScopeFactory, ILogger<Ac
 		await SeedRoles(list, roleManager);
 		await dbContext.SaveChangesAsync();
 		await SeedRolePermissionsAsync(list, dbContext);
-		await dbContext.SaveChangesAsync();
+		await CheckAndDeleteUnusingRolePermissionsAsync(list, dbContext);
 	}
 
 	private async Task SeedPermissions(List<(string role, string[] permissions)> list, AccountDbContext dbContext)
@@ -70,6 +70,27 @@ public class AccountsSeeder(IServiceScopeFactory serviceScopeFactory, ILogger<Ac
 			}
 		}
 
+		await dbContext.SaveChangesAsync();
 		logger.LogInformation("RolePermissions seeded successfully");
+	}
+
+	private async Task CheckAndDeleteUnusingRolePermissionsAsync(List<(string role, string[] permissions)> list, AccountDbContext dbContext)
+	{
+		foreach (var data in list)
+		{
+			var rolePermissions = await dbContext.RolePermissions
+				.Where(a => a.Role.Name == data.role)
+				.Include(a => a.Permission)
+				.ToListAsync();
+
+			foreach (var rolePermission in rolePermissions)
+			{
+				if (!data.permissions.Any(a => a == rolePermission.Permission.Code))
+					dbContext.RolePermissions.Remove(rolePermission);
+			}
+		}
+
+		await dbContext.SaveChangesAsync();
+		logger.LogInformation("RolePermissions checked successfully");
 	}
 }

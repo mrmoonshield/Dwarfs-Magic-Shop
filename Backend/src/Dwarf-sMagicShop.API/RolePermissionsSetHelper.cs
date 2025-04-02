@@ -28,7 +28,6 @@ public class RolePermissionsSetHelper
 
 		list.Add((Roles.CRAFTER,
 			[
-				Permissions.CREATE_CRAFTER,
 				Permissions.UPDATE_CRAFTER,
 				Permissions.READ_CRAFTER,
 				Permissions.DELETE_CRAFTER
@@ -36,7 +35,8 @@ public class RolePermissionsSetHelper
 
 		list.Add((Roles.USER,
 			[
-				Permissions.READ_CRAFTER
+				Permissions.READ_CRAFTER,
+				Permissions.CREATE_CRAFTER
 			]));
 
 		return list;
