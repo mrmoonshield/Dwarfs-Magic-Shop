@@ -6,7 +6,9 @@ public static class Inject
 {
 	public static IServiceCollection AddApi(this IServiceCollection services)
 	{
-		return services.AddSwagger();
+		return services
+			.AddSwagger()
+			.AddSingleton<RolePermissionsSetHelper>();
 	}
 
 	private static IServiceCollection AddSwagger(this IServiceCollection services)

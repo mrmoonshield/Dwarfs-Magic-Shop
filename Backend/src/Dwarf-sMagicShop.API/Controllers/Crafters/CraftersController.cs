@@ -1,3 +1,4 @@
+using Dwarf_sMagicShop.Accounts.Domain;
 using Dwarf_sMagicShop.API.Controllers.Accounts;
 using Dwarf_sMagicShop.API.Extensions;
 using Dwarf_sMagicShop.API.Response;
@@ -33,6 +34,7 @@ public class CraftersController : BaseController
 		this.logger = logger;
 	}
 
+	[Permission(Permissions.CREATE_CRAFTER)]
 	[HttpPost]
 	public async Task<ActionResult<Guid>> Create(
 		[FromServices] CreateCrafterHandler crafterHandler,

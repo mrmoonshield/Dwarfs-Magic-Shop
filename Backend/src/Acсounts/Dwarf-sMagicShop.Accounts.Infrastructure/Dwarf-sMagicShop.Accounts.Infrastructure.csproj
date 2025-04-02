@@ -26,4 +26,8 @@
     <ProjectReference Include="..\Dwarf-sMagicShop.Accounts.Application\Dwarf-sMagicShop.Accounts.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Abstracts\" />
+  </ItemGroup>
+
 </Project>

@@ -1,5 +1,6 @@
 ﻿using Dwarf_sMagicShop.Accounts.Application.Abstracts;
 using Dwarf_sMagicShop.Accounts.Domain.Models;
+using Dwarf_sMagicShop.Core;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,7 +12,6 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Providers;
 public class JwtTokenProvider : ITokenProvider
 {
 	private readonly JwtSettings jwtOptions;
-	private const string SUBJECT = "Sub";
 
 	public JwtTokenProvider(IOptions<JwtSettings> jwtOptions)
 	{
@@ -23,10 +23,10 @@ public class JwtTokenProvider : ITokenProvider
 		var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key));
 		var creds = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-		Claim[] claims = 
+		Claim[] claims =
 			[
-				new Claim(SUBJECT, user.Id.ToString()),
-				new Claim("Permission", "Crafter")
+				new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+				new Claim(CustomClaims.PERMISSION, Permissions.READ_CRAFTER)
 			];
 
 		var token = new JwtSecurityToken(

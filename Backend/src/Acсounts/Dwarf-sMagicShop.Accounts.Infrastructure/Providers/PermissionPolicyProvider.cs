@@ -24,6 +24,7 @@ public class PermissionPolicyProvider : IAuthorizationPolicyProvider
 			return Task.FromResult<AuthorizationPolicy?>(null);
 
 		var policy = new AuthorizationPolicyBuilder()
+			.RequireAuthenticatedUser()
 			.AddRequirements(new PermissionAttribute(policyName));
 
 		return Task.FromResult(policy?.Build());

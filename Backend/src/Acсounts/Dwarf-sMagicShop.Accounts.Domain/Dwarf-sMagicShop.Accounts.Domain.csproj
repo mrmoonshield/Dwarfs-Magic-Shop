@@ -12,4 +12,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.14" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Dwarf-sMagicShop.Shared\Dwarf-sMagicShop.Core.csproj" />
+  </ItemGroup>
+
 </Project>

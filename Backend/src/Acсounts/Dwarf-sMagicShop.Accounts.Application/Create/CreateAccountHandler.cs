@@ -32,6 +32,8 @@ public class CreateAccountHandler : IUnitResultHandler<AccountUserRequest>
 			return errors.ToErrorsList();
 		}
 
+		//userManager.AddToRoleAsync(user)
+
 		return Result.Success<ErrorsList>();
 	}
 }

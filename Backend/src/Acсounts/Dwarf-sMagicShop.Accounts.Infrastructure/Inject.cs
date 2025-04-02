@@ -24,7 +24,8 @@ public static class Inject
 			.AddIdentity()
 			.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>()
 			.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>()
-			.AddAuthorization();
+			.AddAuthorization()
+			.AddSingleton<AccountsSeeder>();
 
 		return services;
 	}

@@ -38,6 +38,7 @@ builder
 	.AddInfrastructureAccountsBuilder();
 
 var app = builder.Build();
+app.Services.GetRequiredService<RolePermissionsSetHelper>().SetRolePermissions();
 app.UseExeptionsHandler();
 
 // Configure the HTTP request pipeline.

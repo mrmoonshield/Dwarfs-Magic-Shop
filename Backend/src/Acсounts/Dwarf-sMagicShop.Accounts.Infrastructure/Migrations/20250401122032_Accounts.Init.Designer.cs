@@ -12,18 +12,37 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountDbContext))]
-    [Migration("20250327134132_Init")]
-    partial class Init
+    [Migration("20250401122032_Accounts.Init")]
+    partial class AccountsInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("accounts")
                 .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Dwarf_sMagicShop.Accounts.Domain.Models.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("code");
+
+                    b.HasKey("Id")
+                        .HasName("pk_permissions");
+
+                    b.ToTable("permissions", "accounts");
+                });
 
             modelBuilder.Entity("Dwarf_sMagicShop.Accounts.Domain.Models.Role", b =>
                 {
@@ -54,7 +73,26 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("roles", (string)null);
+                    b.ToTable("roles", "accounts");
+                });
+
+            modelBuilder.Entity("Dwarf_sMagicShop.Accounts.Domain.Models.RolePermission", b =>
+                {
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
+
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("permission_id");
+
+                    b.HasKey("RoleId", "PermissionId")
+                        .HasName("pk_role_permissions");
+
+                    b.HasIndex("PermissionId")
+                        .HasDatabaseName("ix_role_permissions_permission_id");
+
+                    b.ToTable("role_permissions", "accounts");
                 });
 
             modelBuilder.Entity("Dwarf_sMagicShop.Accounts.Domain.Models.User", b =>
@@ -135,7 +173,7 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("users", (string)null);
+                    b.ToTable("users", "accounts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -165,7 +203,7 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                     b.HasIndex("RoleId")
                         .HasDatabaseName("ix_role_claims_role_id");
 
-                    b.ToTable("role_claims", (string)null);
+                    b.ToTable("role_claims", "accounts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
@@ -195,7 +233,7 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_user_claims_user_id");
 
-                    b.ToTable("user_claims", (string)null);
+                    b.ToTable("user_claims", "accounts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
@@ -222,7 +260,7 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_user_logins_user_id");
 
-                    b.ToTable("user_logins", (string)null);
+                    b.ToTable("user_logins", "accounts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
@@ -241,7 +279,7 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                     b.HasIndex("RoleId")
                         .HasDatabaseName("ix_user_roles_role_id");
 
-                    b.ToTable("user_roles", (string)null);
+                    b.ToTable("user_roles", "accounts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -265,7 +303,28 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name")
                         .HasName("pk_user_tokens");
 
-                    b.ToTable("user_tokens", (string)null);
+                    b.ToTable("user_tokens", "accounts");
+                });
+
+            modelBuilder.Entity("Dwarf_sMagicShop.Accounts.Domain.Models.RolePermission", b =>
+                {
+                    b.HasOne("Dwarf_sMagicShop.Accounts.Domain.Models.Permission", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_role_permissions_permissions_permission_id");
+
+                    b.HasOne("Dwarf_sMagicShop.Accounts.Domain.Models.Role", "Role")
+                        .WithMany("Permissions")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_role_permissions_roles_role_id");
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -323,6 +382,11 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_user_tokens_users_user_id");
+                });
+
+            modelBuilder.Entity("Dwarf_sMagicShop.Accounts.Domain.Models.Role", b =>
+                {
+                    b.Navigation("Permissions");
                 });
 #pragma warning restore 612, 618
         }
