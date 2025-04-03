@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountDbContext))]
-    [Migration("20250401122032_Accounts.Init")]
-    partial class AccountsInit
+    [Migration("20250403131040_Accounts.AddCrafterIdColumn")]
+    partial class AccountsAddCrafterIdColumn
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,34 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Dwarf_sMagicShop.Accounts.Domain.Models.CrafterAccount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("CrafterId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("crafter_id");
+
+                    b.Property<string>("Socials")
+                        .HasColumnType("text")
+                        .HasColumnName("socials");
+
+                    b.Property<Guid>("UserId1")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id1");
+
+                    b.HasKey("Id")
+                        .HasName("crafter_account_id");
+
+                    b.HasIndex("UserId1")
+                        .HasDatabaseName("ix_crafter_accounts_user_id1");
+
+                    b.ToTable("crafter_accounts", "accounts");
+                });
 
             modelBuilder.Entity("Dwarf_sMagicShop.Accounts.Domain.Models.Permission", b =>
                 {
@@ -40,6 +68,10 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_permissions");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("ix_permissions_code");
 
                     b.ToTable("permissions", "accounts");
                 });
@@ -304,6 +336,18 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                         .HasName("pk_user_tokens");
 
                     b.ToTable("user_tokens", "accounts");
+                });
+
+            modelBuilder.Entity("Dwarf_sMagicShop.Accounts.Domain.Models.CrafterAccount", b =>
+                {
+                    b.HasOne("Dwarf_sMagicShop.Accounts.Domain.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_crafter_accounts_users_user_id1");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Dwarf_sMagicShop.Accounts.Domain.Models.RolePermission", b =>

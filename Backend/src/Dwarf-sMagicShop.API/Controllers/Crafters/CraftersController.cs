@@ -1,4 +1,4 @@
-using Dwarf_sMagicShop.Accounts.Domain;
+using Dwarf_sMagicShop.Accounts.Domain.Attributes;
 using Dwarf_sMagicShop.API.Controllers.Accounts;
 using Dwarf_sMagicShop.API.Extensions;
 using Dwarf_sMagicShop.API.Response;

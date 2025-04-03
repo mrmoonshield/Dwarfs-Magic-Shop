@@ -13,6 +13,7 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts
 	{
 		public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
 		public DbSet<Permission> Permissions => Set<Permission>();
+		public DbSet<CrafterAccount> CrafterAccounts => Set<CrafterAccount>();
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
@@ -33,13 +34,26 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts
 			builder.Entity<IdentityUserLogin<Guid>>().ToTable("user_logins");
 			builder.Entity<IdentityRoleClaim<Guid>>().ToTable("role_claims");
 			builder.Entity<IdentityUserRole<Guid>>().ToTable("user_roles");
+			builder.Entity<CrafterAccount>().ToTable("crafter_accounts");
 
-			//builder.Entity<User>()
-			//	.Property(a => a.Socials)
-			//	.HasConversion(
-			//		socials => JsonSerializer.Serialize(socials, JsonSerializerOptions.Default),
-			//		json => JsonSerializer.Deserialize<List<Social>>(json, JsonSerializerOptions.Default)!)
-			//	.IsRequired(false);
+			builder.Entity<CrafterAccount>()
+				.HasKey(a => a.Id)
+				.HasName("crafter_account_id");
+
+			builder.Entity<CrafterAccount>()
+				.Property(a => a.Socials)
+				.HasConversion(
+					socials => JsonSerializer.Serialize(socials, JsonSerializerOptions.Default),
+					json => JsonSerializer.Deserialize<List<Social>>(json, JsonSerializerOptions.Default)!)
+				.HasColumnName("socials")
+				.IsRequired(false);
+
+			builder.Entity<CrafterAccount>()
+				.HasOne(a => a.User);
+
+			builder.Entity<CrafterAccount>()
+				.Property(a => a.CrafterId)
+				.HasColumnName("crafter_id");
 
 			builder.Entity<Permission>()
 				.HasIndex(a => a.Code)

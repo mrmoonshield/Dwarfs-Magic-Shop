@@ -1,7 +1,7 @@
-﻿using Dwarf_sMagicShop.Accounts.Domain;
+﻿using Dwarf_sMagicShop.Accounts.Domain.Attributes;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Dwarf_sMagicShop.Accounts.Application.RequirementsHandlers;
+namespace Dwarf_sMagicShop.Accounts.Application;
 
 public class PermissionRequirementHandler : AuthorizationHandler<PermissionAttribute>
 {

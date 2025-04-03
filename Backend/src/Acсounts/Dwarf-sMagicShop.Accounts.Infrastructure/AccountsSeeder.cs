@@ -1,9 +1,12 @@
 ﻿using Dwarf_sMagicShop.Accounts.Domain.Models;
 using Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts;
+using Dwarf_sMagicShop.Accounts.Infrastructure.Settings;
+using Dwarf_sMagicShop.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Dwarf_sMagicShop.Accounts.Infrastructure;
 
@@ -14,11 +17,13 @@ public class AccountsSeeder(IServiceScopeFactory serviceScopeFactory, ILogger<Ac
 		using var scope = serviceScopeFactory.CreateScope();
 		var dbContext = scope.ServiceProvider.GetRequiredService<AccountDbContext>();
 		var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+		var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 		await SeedPermissions(list, dbContext);
 		await SeedRoles(list, roleManager);
 		await dbContext.SaveChangesAsync();
 		await SeedRolePermissionsAsync(list, dbContext);
 		await CheckAndDeleteUnusingRolePermissionsAsync(list, dbContext);
+		await SeedAdminAsync(scope, userManager);
 	}
 
 	private async Task SeedPermissions(List<(string role, string[] permissions)> list, AccountDbContext dbContext)
@@ -60,6 +65,12 @@ public class AccountsSeeder(IServiceScopeFactory serviceScopeFactory, ILogger<Ac
 				var existRole = await dbContext.Roles.FirstOrDefaultAsync(a => a.Name == data.role);
 				var existPermission = await dbContext.Permissions.FirstOrDefaultAsync(a => a.Code == permissionCode);
 
+				if (existRole == null)
+					throw new ArgumentNullException($"Role {data.role} is not found");
+
+				if (existPermission == null)
+					throw new ArgumentNullException($"Permission {permissionCode} is not found");
+
 				var rolePermission = new RolePermission
 				{
 					RoleId = existRole!.Id,
@@ -74,7 +85,9 @@ public class AccountsSeeder(IServiceScopeFactory serviceScopeFactory, ILogger<Ac
 		logger.LogInformation("RolePermissions seeded successfully");
 	}
 
-	private async Task CheckAndDeleteUnusingRolePermissionsAsync(List<(string role, string[] permissions)> list, AccountDbContext dbContext)
+	private async Task CheckAndDeleteUnusingRolePermissionsAsync(
+		List<(string role, string[] permissions)> list,
+		AccountDbContext dbContext)
 	{
 		foreach (var data in list)
 		{
@@ -92,5 +105,22 @@ public class AccountsSeeder(IServiceScopeFactory serviceScopeFactory, ILogger<Ac
 
 		await dbContext.SaveChangesAsync();
 		logger.LogInformation("RolePermissions checked successfully");
+	}
+
+	private async Task SeedAdminAsync(IServiceScope scope, UserManager<User> userManager)
+	{
+		var adminSettings = scope.ServiceProvider.GetRequiredService<IOptions<AdminSettings>>().Value;
+		var admin = new User { UserName = adminSettings.UserName };
+		var result = await userManager.CreateAsync(admin, adminSettings.Password);
+		
+		if (!result.Succeeded)
+		{
+			var log = result.Errors.Select(a => a.Code).Aggregate((a, b) => a + "; " + b);
+			logger.LogInformation($"Admin seeding failed: {log}");
+			return;
+		}
+
+		await userManager.AddToRoleAsync(admin!, Roles.ADMIN);
+		logger.LogInformation("Admin seeded successfully");
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Dwarf_sMagicShop.Accounts.Application.Requests;
 using Dwarf_sMagicShop.Accounts.Domain.Models;
+using Dwarf_sMagicShop.Core;
 using Dwarf_sMagicShop.Core.Abstractions;
 using Dwarf_sMagicShop.Core.ErrorsHelpers;
 using Microsoft.AspNetCore.Identity;
@@ -32,8 +33,7 @@ public class CreateAccountHandler : IUnitResultHandler<AccountUserRequest>
 			return errors.ToErrorsList();
 		}
 
-		//userManager.AddToRoleAsync(user)
-
+		await userManager.AddToRoleAsync(user, Roles.USER);
 		return Result.Success<ErrorsList>();
 	}
 }

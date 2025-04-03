@@ -19,15 +19,12 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="Scrutor" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Dwarf-sMagicShop.Shared\Dwarf-sMagicShop.Core.csproj" />
     <ProjectReference Include="..\Dwarf-sMagicShop.Accounts.Application\Dwarf-sMagicShop.Accounts.Application.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Abstracts\" />
   </ItemGroup>
 
 </Project>

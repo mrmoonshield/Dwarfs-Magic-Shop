@@ -1,12 +1,15 @@
-﻿using Dwarf_sMagicShop.Accounts.Application.Abstracts;
-using Dwarf_sMagicShop.Accounts.Application.RequirementsHandlers;
+﻿using Dwarf_sMagicShop.Accounts.Application;
+using Dwarf_sMagicShop.Accounts.Application.Abstracts;
 using Dwarf_sMagicShop.Accounts.Domain.Models;
 using Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts;
 using Dwarf_sMagicShop.Accounts.Infrastructure.Providers;
+using Dwarf_sMagicShop.Accounts.Infrastructure.Repositories;
+using Dwarf_sMagicShop.Accounts.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -20,6 +23,7 @@ public static class Inject
 	{
 		services
 			.AddScoped<AccountDbContext>()
+			.AddScoped<IAccountRepository, AccountRepository>()
 			.AddScoped<ITokenProvider, JwtTokenProvider>()
 			.AddIdentity()
 			.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>()
@@ -32,8 +36,9 @@ public static class Inject
 
 	public static WebApplicationBuilder AddInfrastructureAccountsBuilder(this WebApplicationBuilder builder)
 	{
-		builder.Services.Configure<JwtSettings>(
-			builder.Configuration.GetSection(nameof(JwtSettings)));
+		builder.Services
+			.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)))
+			.Configure<AdminSettings>(builder.Configuration.GetSection(AdminSettings.ADMIN));
 
 		AddJwtBearerService(builder);
 		return builder;

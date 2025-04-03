@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Dwarf_sMagicShop.Accounts.Domain;
+namespace Dwarf_sMagicShop.Accounts.Domain.Attributes;
 
 public class PermissionAttribute : AuthorizeAttribute, IAuthorizationRequirement
 {

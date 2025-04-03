@@ -1,5 +1,6 @@
 ﻿using Dwarf_sMagicShop.Accounts.Application.Abstracts;
 using Dwarf_sMagicShop.Accounts.Domain.Models;
+using Dwarf_sMagicShop.Accounts.Infrastructure.Settings;
 using Dwarf_sMagicShop.Core;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

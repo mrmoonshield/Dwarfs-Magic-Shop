@@ -120,6 +120,27 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "crafter_accounts",
+                schema: "accounts",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id1 = table.Column<Guid>(type: "uuid", nullable: false),
+                    socials = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("crafter_account_id", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_crafter_accounts_users_user_id1",
+                        column: x => x.user_id1,
+                        principalSchema: "accounts",
+                        principalTable: "users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "user_claims",
                 schema: "accounts",
                 columns: table => new
@@ -214,6 +235,19 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "ix_crafter_accounts_user_id1",
+                schema: "accounts",
+                table: "crafter_accounts",
+                column: "user_id1");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_permissions_code",
+                schema: "accounts",
+                table: "permissions",
+                column: "code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "ix_role_claims_role_id",
                 schema: "accounts",
                 table: "role_claims",
@@ -267,6 +301,10 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "crafter_accounts",
+                schema: "accounts");
+
             migrationBuilder.DropTable(
                 name: "role_claims",
                 schema: "accounts");

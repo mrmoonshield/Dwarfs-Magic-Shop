@@ -1,4 +1,4 @@
-﻿namespace Dwarf_sMagicShop.Accounts.Domain.Models;
+﻿namespace Dwarf_sMagicShop.Accounts.Infrastructure.Settings;
 
 public class JwtSettings
 {
