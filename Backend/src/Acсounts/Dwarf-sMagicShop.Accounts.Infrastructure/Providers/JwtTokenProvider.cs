@@ -27,7 +27,7 @@ public class JwtTokenProvider : ITokenProvider
 		Claim[] claims =
 			[
 				new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-				new Claim(CustomClaims.PERMISSION, Permissions.READ_CRAFTER)
+				new Claim(CustomClaims.ROLE, user.Role.Name!)
 			];
 
 		var token = new JwtSecurityToken(

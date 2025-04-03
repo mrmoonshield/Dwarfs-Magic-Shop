@@ -50,6 +50,7 @@ public class CraftersController : BaseController
 		return Ok(Envelope.Ok(result.Value.Id.Value));
 	}
 
+	[Permission(Permissions.UPDATE_CRAFTER)]
 	[HttpPut("{id:guid}/main-info")]
 	public async Task<ActionResult<Guid>> UpdateMainInfo(
 		[FromServices] UpdateMainInfoCrafterHandler crafterHandler,
@@ -67,23 +68,7 @@ public class CraftersController : BaseController
 		return Ok(result.Value);
 	}
 
-	[HttpPut("{id:guid}/socials")]
-	public async Task<ActionResult<Guid>> UpdateSocials(
-		[FromServices] UpdateSocialsCrafterHandler crafterHandler,
-		[FromRoute] Guid id,
-		[FromBody] IReadOnlyCollection<UpdateSocialsCrafterDto> request,
-		CancellationToken cancellationToken = default)
-	{
-		var updateCommand = new UpdateSocialsCrafterCommand(id, request);
-		var result = await crafterHandler.ExecuteAsync(updateCommand, cancellationToken);
-
-		if (result.IsFailure)
-			return result.Error.ToResponse();
-
-		logger.LogInformation("Crafter {id} updated", id);
-		return Ok(result.Value);
-	}
-
+	[Permission(Permissions.DELETE_CRAFTER)]
 	[HttpDelete("{id:guid}")]
 	public async Task<ActionResult<Guid>> DeleteCrafter(
 		[FromServices] DeleteCrafterHandler crafterHandler,
@@ -100,6 +85,7 @@ public class CraftersController : BaseController
 		return Ok(result.Value);
 	}
 
+	[Permission(Permissions.CREATE_MAGIC_ARTEFACT)]
 	[HttpPost("{id:guid}/magic-artefacts")]
 	public async Task<ActionResult<Guid>> AddMagicArtefact(
 		[FromServices] CreateMagicArtefactHandler artefactHandler,
@@ -128,6 +114,7 @@ public class CraftersController : BaseController
 		return artefactResult.Value.Id.Value;
 	}
 
+	[Permission(Permissions.UPDATE_MAGIC_ARTEFACT)]
 	[HttpPost("{crafterId:guid}/magic-artefacts/{artefactId:guid}/positions")]
 	public async Task<IActionResult> MoveMagicArtefact(
 		[FromServices] MoveMagicArtefactHandler moveMagicArtefactHandler,
@@ -145,6 +132,7 @@ public class CraftersController : BaseController
 		return Ok();
 	}
 
+	[Permission(Permissions.READ_CRAFTER)]
 	[HttpGet]
 	public async Task<ActionResult<PagedList<CrafterDto>>> GetCrafters(
 		[FromServices] GetCraftersWithPaginationHandler handler,
@@ -156,6 +144,7 @@ public class CraftersController : BaseController
 		return result;
 	}
 
+	[Permission(Permissions.READ_CRAFTER)]
 	[HttpGet("{id:guid}")]
 	public async Task<ActionResult<CrafterDto>> GetCrafter(
 		[FromServices] GetCrafterHandler handler,
@@ -170,6 +159,7 @@ public class CraftersController : BaseController
 		return result.Value;
 	}
 
+	[Permission(Permissions.UPDATE_MAGIC_ARTEFACT)]
 	[HttpPut("{crafterId:guid}/magic-artefacts/{artefactId:guid}/infos")]
 	public async Task<ActionResult> UpdateMagicArtefactInfo(
 		[FromServices] UpdateMagicArtefactInfoHandler artefactHandler,
@@ -187,6 +177,7 @@ public class CraftersController : BaseController
 		return Ok();
 	}
 
+	[Permission(Permissions.UPDATE_MAGIC_ARTEFACT)]
 	[HttpPut("{crafterId:guid}/magic-artefacts/{artefactId:guid}/statuses")]
 	public async Task<ActionResult> UpdateMagicArtefactStatus(
 		[FromServices] UpdateMagicArtefactStatusHandler artefactHandler,
@@ -204,6 +195,7 @@ public class CraftersController : BaseController
 		return Ok();
 	}
 
+	[Permission(Permissions.UPDATE_MAGIC_ARTEFACT)]
 	[HttpPut("{crafterId:guid}/magic-artefacts/{artefactId:guid}/images")]
 	public async Task<ActionResult> UpdateMagicArtefactImage(
 		[FromServices] UpdateMagicArtefactImageHandler artefactHandler,
@@ -229,6 +221,7 @@ public class CraftersController : BaseController
 		return Ok();
 	}
 
+	[Permission(Permissions.DELETE_MAGIC_ARTEFACT)]
 	[HttpDelete("{crafterId:guid}/magic-artefacts/{artefactId:guid}")]
 	public async Task<ActionResult> DeleteMagicArtefact(
 		[FromServices] DeleteMagicArtefactHandler artefactHandler,
@@ -245,6 +238,7 @@ public class CraftersController : BaseController
 		return Ok();
 	}
 
+	[Permission(Permissions.READ_MAGIC_ARTEFACT)]
 	[HttpGet("/magic-artefacts")]
 	public async Task<ActionResult<PagedList<MagicArtefactDto>>> GetMagicArtefacts(
 		[FromServices] GetMagicArtefactsWithPaginationHandler handler,
@@ -260,6 +254,7 @@ public class CraftersController : BaseController
 		return result.Value;
 	}
 
+	[Permission(Permissions.READ_MAGIC_ARTEFACT)]
 	[HttpGet("{crafterId:guid}/magic-artefacts/{artefactId:guid}")]
 	public async Task<ActionResult<MagicArtefactDto>> GetMagicArtefact(
 		[FromServices] GetMagicArtefactHandler handler,

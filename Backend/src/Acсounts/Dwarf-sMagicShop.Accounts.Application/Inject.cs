@@ -2,7 +2,7 @@
 using Dwarf_sMagicShop.Core.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Dwarf_sMagicShop.Species.Application;
+namespace Dwarf_sMagicShop.Accounts.Application;
 
 public static class Inject
 {

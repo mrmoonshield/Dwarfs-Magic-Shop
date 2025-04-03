@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Dwarf_sMagicShop.Accounts.Application.UpdateCrafter;
 using Dwarf_sMagicShop.Core.Enums;
 using Dwarf_sMagicShop.Crafters.Application.Crafters.CreateCrafter;
 using Dwarf_sMagicShop.Crafters.Application.Crafters.Delete;

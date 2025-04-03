@@ -44,32 +44,6 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "users",
-                schema: "accounts",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    normalized_user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    normalized_email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    email_confirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    password_hash = table.Column<string>(type: "text", nullable: true),
-                    security_stamp = table.Column<string>(type: "text", nullable: true),
-                    concurrency_stamp = table.Column<string>(type: "text", nullable: true),
-                    phone_number = table.Column<string>(type: "text", nullable: true),
-                    phone_number_confirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    two_factor_enabled = table.Column<bool>(type: "boolean", nullable: false),
-                    lockout_end = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    lockout_enabled = table.Column<bool>(type: "boolean", nullable: false),
-                    access_failed_count = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_users", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "role_claims",
                 schema: "accounts",
                 columns: table => new
@@ -120,12 +94,47 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "users",
+                schema: "accounts",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    role_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    normalized_user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    normalized_email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    email_confirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    password_hash = table.Column<string>(type: "text", nullable: true),
+                    security_stamp = table.Column<string>(type: "text", nullable: true),
+                    concurrency_stamp = table.Column<string>(type: "text", nullable: true),
+                    phone_number = table.Column<string>(type: "text", nullable: true),
+                    phone_number_confirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    two_factor_enabled = table.Column<bool>(type: "boolean", nullable: false),
+                    lockout_end = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    lockout_enabled = table.Column<bool>(type: "boolean", nullable: false),
+                    access_failed_count = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_users", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_users_roles_role_id",
+                        column: x => x.role_id,
+                        principalSchema: "accounts",
+                        principalTable: "roles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "crafter_accounts",
                 schema: "accounts",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     user_id1 = table.Column<Guid>(type: "uuid", nullable: false),
+                    crafter_id = table.Column<Guid>(type: "uuid", nullable: false),
                     socials = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -291,6 +300,12 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                 column: "normalized_email");
 
             migrationBuilder.CreateIndex(
+                name: "ix_users_role_id",
+                schema: "accounts",
+                table: "users",
+                column: "role_id");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 schema: "accounts",
                 table: "users",
@@ -334,11 +349,11 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                 schema: "accounts");
 
             migrationBuilder.DropTable(
-                name: "roles",
+                name: "users",
                 schema: "accounts");
 
             migrationBuilder.DropTable(
-                name: "users",
+                name: "roles",
                 schema: "accounts");
         }
     }

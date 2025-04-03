@@ -1,9 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
+using Dwarf_sMagicShop.Accounts.Application.Abstracts;
 using Dwarf_sMagicShop.Accounts.Application.Requests;
 using Dwarf_sMagicShop.Accounts.Domain.Models;
 using Dwarf_sMagicShop.Core;
 using Dwarf_sMagicShop.Core.Abstractions;
 using Dwarf_sMagicShop.Core.ErrorsHelpers;
+using Dwarf_sMagicShop.Core.Extensions;
 using Microsoft.AspNetCore.Identity;
 
 namespace Dwarf_sMagicShop.Accounts.Application.Create;
@@ -11,10 +13,12 @@ namespace Dwarf_sMagicShop.Accounts.Application.Create;
 public class CreateAccountHandler : IUnitResultHandler<AccountUserRequest>
 {
 	private readonly UserManager<User> userManager;
+	private readonly IAccountRepository accountRepository;
 
-	public CreateAccountHandler(UserManager<User> userManager)
+	public CreateAccountHandler(UserManager<User> userManager, IAccountRepository accountRepository)
 	{
 		this.userManager = userManager;
+		this.accountRepository = accountRepository;
 	}
 
 	public async Task<UnitResult<ErrorsList>> ExecuteAsync(AccountUserRequest request, CancellationToken cancellationToken)
@@ -24,7 +28,12 @@ public class CreateAccountHandler : IUnitResultHandler<AccountUserRequest>
 		if (user != null)
 			return Errors.ValueIsAlreadyExist(request.UserName).ToErrorsList();
 
-		user = new User { UserName = request.UserName };
+		var roleResult = await accountRepository.GetRoleAsync(Roles.USER);
+
+		if (roleResult.IsFailure)
+			return roleResult.ToErrorsList();
+
+		user = new User { UserName = request.UserName, Role = roleResult.Value };
 		var result = await userManager.CreateAsync(user, request.Password);
 
 		if (!result.Succeeded)

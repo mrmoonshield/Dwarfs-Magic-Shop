@@ -8,7 +8,6 @@ namespace Dwarf_sMagicShop.Crafters.Domain.Models;
 public sealed class Crafter : SoftDeletableEntity<CrafterID>
 {
 	private List<MagicArtefact> artefacts = [];
-	private List<Social> socials = [];
 
 	private Crafter(CrafterID id, Nickname nickname) : base(id)
 	{
@@ -18,7 +17,6 @@ public sealed class Crafter : SoftDeletableEntity<CrafterID>
 	public Nickname Nickname { get; private set; } = default!;
 	public int Experience { get; private set; }
 	public IReadOnlyCollection<MagicArtefact> Artefacts => artefacts;
-	public IReadOnlyCollection<Social> Socials => socials;
 
 	public static Result<Crafter, Error> Create(CrafterID id, Nickname nickname)
 	{
@@ -91,11 +89,6 @@ public sealed class Crafter : SoftDeletableEntity<CrafterID>
 	{
 		Nickname = nickname;
 		Experience = experience;
-	}
-
-	public void UpdateSocials(List<Social> socials)
-	{
-		this.socials = socials;
 	}
 
 	public override void Delete()

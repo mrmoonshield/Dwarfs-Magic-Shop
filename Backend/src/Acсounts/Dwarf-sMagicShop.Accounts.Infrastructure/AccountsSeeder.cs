@@ -23,7 +23,7 @@ public class AccountsSeeder(IServiceScopeFactory serviceScopeFactory, ILogger<Ac
 		await dbContext.SaveChangesAsync();
 		await SeedRolePermissionsAsync(list, dbContext);
 		await CheckAndDeleteUnusingRolePermissionsAsync(list, dbContext);
-		await SeedAdminAsync(scope, userManager);
+		await SeedAdminAsync(scope, userManager, dbContext);
 	}
 
 	private async Task SeedPermissions(List<(string role, string[] permissions)> list, AccountDbContext dbContext)
@@ -107,12 +107,13 @@ public class AccountsSeeder(IServiceScopeFactory serviceScopeFactory, ILogger<Ac
 		logger.LogInformation("RolePermissions checked successfully");
 	}
 
-	private async Task SeedAdminAsync(IServiceScope scope, UserManager<User> userManager)
+	private async Task SeedAdminAsync(IServiceScope scope, UserManager<User> userManager, AccountDbContext dbContext)
 	{
 		var adminSettings = scope.ServiceProvider.GetRequiredService<IOptions<AdminSettings>>().Value;
-		var admin = new User { UserName = adminSettings.UserName };
+		var role = await dbContext.Roles.FirstOrDefaultAsync(a => a.Name == Roles.ADMIN);
+		var admin = new User { UserName = adminSettings.UserName, Role = role! };
 		var result = await userManager.CreateAsync(admin, adminSettings.Password);
-		
+
 		if (!result.Succeeded)
 		{
 			var log = result.Errors.Select(a => a.Code).Aggregate((a, b) => a + "; " + b);

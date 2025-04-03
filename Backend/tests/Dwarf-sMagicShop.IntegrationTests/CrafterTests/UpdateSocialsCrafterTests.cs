@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
+using Dwarf_sMagicShop.Accounts.Application.UpdateCrafter;
 using Dwarf_sMagicShop.Core.Abstractions;
 using Dwarf_sMagicShop.Core.Enums;
-using Dwarf_sMagicShop.Crafters.Application.Crafters.UpdateCrafter;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Dwarf_sMagicShop.IntegrationTests.CrafterTests;

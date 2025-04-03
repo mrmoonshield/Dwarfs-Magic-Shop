@@ -23,20 +23,26 @@ public class RolePermissionsSetHelper
 
 		list.Add((Roles.ADMIN,
 			[
-				Permissions.READ_CRAFTER
+				Permissions.READ_CRAFTER,
+				Permissions.READ_MAGIC_ARTEFACT
 			]));
 
 		list.Add((Roles.CRAFTER,
 			[
 				Permissions.UPDATE_CRAFTER,
 				Permissions.READ_CRAFTER,
-				Permissions.DELETE_CRAFTER
+				Permissions.DELETE_CRAFTER,
+				Permissions.CREATE_MAGIC_ARTEFACT,
+				Permissions.DELETE_MAGIC_ARTEFACT,
+				Permissions.READ_MAGIC_ARTEFACT,
+				Permissions.UPDATE_MAGIC_ARTEFACT
 			]));
 
 		list.Add((Roles.USER,
 			[
 				Permissions.READ_CRAFTER,
-				Permissions.CREATE_CRAFTER
+				Permissions.CREATE_CRAFTER,
+				Permissions.READ_MAGIC_ARTEFACT
 			]));
 
 		return list;

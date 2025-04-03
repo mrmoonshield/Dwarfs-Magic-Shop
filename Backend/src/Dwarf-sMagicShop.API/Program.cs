@@ -1,3 +1,4 @@
+using Dwarf_sMagicShop.Accounts.Application;
 using Dwarf_sMagicShop.Accounts.Infrastructure;
 using Dwarf_sMagicShop.API;
 using Dwarf_sMagicShop.API.Middlewares;

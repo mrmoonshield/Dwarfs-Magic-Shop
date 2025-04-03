@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountDbContext))]
-    [Migration("20250403131040_Accounts.AddCrafterIdColumn")]
-    partial class AccountsAddCrafterIdColumn
+    [Migration("20250403200527_Accounts.Init")]
+    partial class AccountsInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -195,6 +195,10 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("user_name");
 
+                    b.Property<Guid>("role_id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
+
                     b.HasKey("Id")
                         .HasName("pk_users");
 
@@ -204,6 +208,9 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("role_id")
+                        .HasDatabaseName("ix_users_role_id");
 
                     b.ToTable("users", "accounts");
                 });
@@ -367,6 +374,18 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                         .HasConstraintName("fk_role_permissions_roles_role_id");
 
                     b.Navigation("Permission");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("Dwarf_sMagicShop.Accounts.Domain.Models.User", b =>
+                {
+                    b.HasOne("Dwarf_sMagicShop.Accounts.Domain.Models.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("role_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_users_roles_role_id");
 
                     b.Navigation("Role");
                 });

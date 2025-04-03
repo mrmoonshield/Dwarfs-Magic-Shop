@@ -31,12 +31,6 @@ public class CrafterConfiguration : IEntityTypeConfiguration<Crafter>
 			.HasForeignKey("crafter_id")
 			.IsRequired(true);
 
-		builder.Property(a => a.Socials)
-			.HasConversion(
-				socials => JsonSerializer.Serialize(socials, JsonSerializerOptions.Default),
-				json => JsonSerializer.Deserialize<IReadOnlyCollection<Social>>(json, JsonSerializerOptions.Default)!)
-			.IsRequired(false);
-
 		builder.Property(a => a.IsDeleted)
 			.HasColumnName("deleted");
 
