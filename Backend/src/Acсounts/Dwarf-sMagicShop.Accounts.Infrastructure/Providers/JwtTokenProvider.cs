@@ -26,7 +26,7 @@ public class JwtTokenProvider : ITokenProvider
 
 		Claim[] claims =
 			[
-				new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+				new Claim(CustomClaims.USER_ID, user.Id.ToString()),
 				new Claim(CustomClaims.ROLE, user.Role.Name!)
 			];
 

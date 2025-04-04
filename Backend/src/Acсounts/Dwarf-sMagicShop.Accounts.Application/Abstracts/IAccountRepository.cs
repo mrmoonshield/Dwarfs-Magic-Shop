@@ -7,6 +7,8 @@ namespace Dwarf_sMagicShop.Accounts.Application.Abstracts;
 public interface IAccountRepository
 {
 	Task<UnitResult<Error>> AddCrafterAccountAsync(CrafterAccount crafterAccount, CancellationToken cancellationToken);
-	Task<Result<Role, Error>> GetRoleAsync(string roleName);
+	Task<Result<Role, Error>> GetRoleAsync(string roleName, CancellationToken cancellationToken);
+	Task<Result<User, Error>> GetUserAsync(string userName, CancellationToken cancellationToken);
 	Task SaveAsync(CancellationToken cancellationToken);
+	Task<IEnumerable<Permission>> GetPermissionsAsync(User user, CancellationToken cancellationToken);
 }

@@ -28,7 +28,7 @@ public class CreateAccountHandler : IUnitResultHandler<AccountUserRequest>
 		if (user != null)
 			return Errors.ValueIsAlreadyExist(request.UserName).ToErrorsList();
 
-		var roleResult = await accountRepository.GetRoleAsync(Roles.USER);
+		var roleResult = await accountRepository.GetRoleAsync(Roles.USER, cancellationToken);
 
 		if (roleResult.IsFailure)
 			return roleResult.ToErrorsList();

@@ -61,7 +61,7 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts
 
 			builder.Entity<RolePermission>()
 				.HasOne(a => a.Role)
-				.WithMany(a => a.Permissions)
+				.WithMany(a => a.RolePermissions)
 				.HasForeignKey(a => a.RoleId);
 
 			builder.Entity<RolePermission>()

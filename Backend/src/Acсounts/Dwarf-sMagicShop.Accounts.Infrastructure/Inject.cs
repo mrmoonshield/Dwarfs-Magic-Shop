@@ -1,5 +1,5 @@
-﻿using Dwarf_sMagicShop.Accounts.Application;
-using Dwarf_sMagicShop.Accounts.Application.Abstracts;
+﻿using Dwarf_sMagicShop.Accounts.Application.Abstracts;
+using Dwarf_sMagicShop.Accounts.Application.Check;
 using Dwarf_sMagicShop.Accounts.Domain.Models;
 using Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts;
 using Dwarf_sMagicShop.Accounts.Infrastructure.Providers;
@@ -22,10 +22,10 @@ public static class Inject
 	public static IServiceCollection AddInfrastructureAccounts(this IServiceCollection services)
 	{
 		services
+			.AddIdentity()
 			.AddScoped<AccountDbContext>()
 			.AddScoped<IAccountRepository, AccountRepository>()
 			.AddScoped<ITokenProvider, JwtTokenProvider>()
-			.AddIdentity()
 			.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>()
 			.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>()
 			.AddAuthorization()
@@ -67,6 +67,7 @@ public static class Inject
 			})
 			.AddJwtBearer(options =>
 			{
+				options.MapInboundClaims = false;
 				var jwtSettings = builder.Configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>()
 				?? throw JwtSettings.GetException();
 

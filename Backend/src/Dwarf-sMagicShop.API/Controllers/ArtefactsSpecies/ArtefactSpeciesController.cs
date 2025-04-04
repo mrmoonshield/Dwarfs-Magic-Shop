@@ -1,5 +1,6 @@
 ﻿using Dwarf_sMagicShop.Accounts.Domain.Attributes;
 using Dwarf_sMagicShop.API.Extensions;
+using Dwarf_sMagicShop.Core;
 using Dwarf_sMagicShop.Core.Dtos;
 using Dwarf_sMagicShop.Species.Application.ArtefactsSpecies.Delete;
 using Dwarf_sMagicShop.Species.Application.ArtefactsSpecies.Get;
@@ -11,7 +12,7 @@ namespace Dwarf_sMagicShop.API.Controllers.ArtefactsSpecies;
 [Authorize]
 public class ArtefactSpeciesController : BaseController
 {
-	[Permission("Crafter")]
+	[Permission(Permissions.READ_CRAFTER)]
 	[HttpGet]
 	public async Task<ActionResult<IReadOnlyCollection<ArtefactSpeciesDto>>> Get(
 		[FromServices] GetArtefactSpeciesHandler handler,
