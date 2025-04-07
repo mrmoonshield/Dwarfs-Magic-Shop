@@ -1,7 +1,6 @@
 ﻿using Dwarf_sMagicShop.Crafters.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Text.Json;
 
 namespace Dwarf_sMagicShop.Crafters.Infrastructure.Configurations.Write;
 

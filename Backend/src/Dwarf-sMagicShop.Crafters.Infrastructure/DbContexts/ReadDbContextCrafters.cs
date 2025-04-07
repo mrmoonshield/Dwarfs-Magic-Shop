@@ -21,6 +21,7 @@ public class ReadDbContextCrafters(string connectionString) : DbContext, IReadDb
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
+		modelBuilder.HasDefaultSchema("crafters");
 		modelBuilder.ApplyConfigurationsFromAssembly(typeof(WriteDbContextCrafters).Assembly,
 			type => type.FullName?.Contains("Read") ?? false);
 	}

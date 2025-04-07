@@ -7,6 +7,5 @@ public class CrafterDto
 	public int Experience { get; init; }
 	public bool IsDeleted { get; init; }
 	public DateTime DeletionDate { get; set; }
-	public IReadOnlyCollection<SocialDto> Socials { get; init; } = [];
 	public IReadOnlyCollection<MagicArtefactDto> Artefacts = [];
 }

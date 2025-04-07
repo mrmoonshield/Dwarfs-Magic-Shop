@@ -19,6 +19,7 @@ public class WriteDbContextCrafters(string connectionString) : DbContext
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
+		modelBuilder.HasDefaultSchema("crafters");
 		modelBuilder.ApplyConfigurationsFromAssembly(typeof(WriteDbContextCrafters).Assembly,
 			type => type.FullName?.Contains("Write") ?? false);
 	}
