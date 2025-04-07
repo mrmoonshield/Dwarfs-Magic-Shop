@@ -11,4 +11,5 @@ public interface IAccountRepository
 	Task<Result<User, Error>> GetUserAsync(string userName, CancellationToken cancellationToken);
 	Task SaveAsync(CancellationToken cancellationToken);
 	Task<IEnumerable<Permission>> GetPermissionsAsync(User user, CancellationToken cancellationToken);
+	Task<Result<CrafterAccount, Error>> GetCrafterAccountAsync(Guid id, CancellationToken cancellationToken);
 }

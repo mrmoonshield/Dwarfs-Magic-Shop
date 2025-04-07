@@ -5,6 +5,7 @@ using Dwarf_sMagicShop.Accounts.Application.UpdateCrafter;
 using Dwarf_sMagicShop.Accounts.Domain.Attributes;
 using Dwarf_sMagicShop.API.Extensions;
 using Dwarf_sMagicShop.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dwarf_sMagicShop.API.Controllers.Accounts;
@@ -47,6 +48,7 @@ public class AccountsController : BaseController
 		return result.Value;
 	}
 
+	[Authorize]
 	[Permission(Permissions.UPDATE_CRAFTER)]
 	[HttpPut("{id:guid}/socials")]
 	public async Task<ActionResult<Guid>> UpdateSocials(

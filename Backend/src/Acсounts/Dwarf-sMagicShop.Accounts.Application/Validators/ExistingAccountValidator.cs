@@ -2,7 +2,6 @@
 using Dwarf_sMagicShop.Accounts.Application.Abstracts;
 using Dwarf_sMagicShop.Accounts.Domain.Models;
 using Dwarf_sMagicShop.Core.ErrorsHelpers;
-using Dwarf_sMagicShop.Core.Extensions;
 using Dwarf_sMagicShop.Core.Validators;
 using Microsoft.AspNetCore.Identity;
 
@@ -45,5 +44,15 @@ public class ExistingAccountValidator : ICustomValidator
 			return Errors.ValueIsInvalid("User name or password");
 
 		return userResult.Value;
+	}
+
+	public async Task<Result<CrafterAccount?, Error>> CheckCrafterAccountAsync(Guid id, CancellationToken cancellationToken)
+	{
+		var crafterAccountResult = await accountRepository.GetCrafterAccountAsync(id, cancellationToken);
+
+		if (crafterAccountResult.IsFailure)
+			return crafterAccountResult.Error;
+
+		return crafterAccountResult.Value;
 	}
 }

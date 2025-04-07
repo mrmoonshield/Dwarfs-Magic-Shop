@@ -12,7 +12,7 @@ namespace Dwarf_sMagicShop.API.Controllers.ArtefactsSpecies;
 [Authorize]
 public class ArtefactSpeciesController : BaseController
 {
-	[Permission(Permissions.READ_CRAFTER)]
+	[Permission(Permissions.READ_SPECIES)]
 	[HttpGet]
 	public async Task<ActionResult<IReadOnlyCollection<ArtefactSpeciesDto>>> Get(
 		[FromServices] GetArtefactSpeciesHandler handler,
@@ -22,6 +22,7 @@ public class ArtefactSpeciesController : BaseController
 		return Ok(result.Value);
 	}
 
+	[Permission(Permissions.DELETE_SPECIES)]
 	[HttpDelete("{id:guid}")]
 	public async Task<ActionResult> Delete(
 		[FromServices] DeleteArtefactSpeciesHandler handler,

@@ -44,9 +44,9 @@ public class AccountRepository(AccountDbContext accountDbContext) : IAccountRepo
 		var permissions = await accountDbContext.Users
 			.Where(a => a == user)
 			.Join(accountDbContext.RolePermissions,
-			a => a.Role,
-			b => b.Role,
-			(a, b) => b.Permission)
+				a => a.Role,
+				b => b.Role,
+				(a, b) => b.Permission)
 			.ToListAsync(cancellationToken);
 
 		return permissions!;
@@ -65,5 +65,18 @@ public class AccountRepository(AccountDbContext accountDbContext) : IAccountRepo
 			return Errors.NotFound(userName);
 
 		return user;
+	}
+
+	public async Task<Result<CrafterAccount, Error>> GetCrafterAccountAsync(
+		Guid id,
+		CancellationToken cancellationToken)
+	{
+		var crafterAccount = await accountDbContext.CrafterAccounts
+			.FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
+
+		if (crafterAccount == null)
+			return Errors.NotFound($"CrafterAccount with id {id}");
+
+		return crafterAccount;
 	}
 }

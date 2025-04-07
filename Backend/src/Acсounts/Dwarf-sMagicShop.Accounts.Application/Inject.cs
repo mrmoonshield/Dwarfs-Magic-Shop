@@ -1,6 +1,7 @@
 ﻿using Dwarf_sMagicShop.Accounts.Application.Validators;
 using Dwarf_sMagicShop.Core.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
+using FluentValidation;
 
 namespace Dwarf_sMagicShop.Accounts.Application;
 
@@ -12,7 +13,8 @@ public static class Inject
 			.AddResultHandlersAccounts()
 			.AddUnitResultHandlersAccounts()
 			.AddQueryHandlersAccounts()
-			.AddScoped<ExistingAccountValidator>();
+			.AddScoped<ExistingAccountValidator>()
+			.AddValidatorsFromAssembly(typeof(Inject).Assembly);
 	}
 
 	public static IServiceCollection AddResultHandlersAccounts(this IServiceCollection services)
