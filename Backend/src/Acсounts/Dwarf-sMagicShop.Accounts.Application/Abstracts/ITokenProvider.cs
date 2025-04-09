@@ -4,5 +4,6 @@ namespace Dwarf_sMagicShop.Accounts.Application.Abstracts;
 
 public interface ITokenProvider
 {
-	string GenerateAccessToken(User user, CancellationToken cancellationToken);
+	(string token, Guid jti) GenerateAccessToken(User user);
+	Task<Guid> GenerateRefreshTokenAsync(User user, Guid jti, CancellationToken cancellationToken);
 }

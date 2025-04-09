@@ -14,6 +14,7 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts
 		public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
 		public DbSet<Permission> Permissions => Set<Permission>();
 		public DbSet<CrafterAccount> CrafterAccounts => Set<CrafterAccount>();
+		public DbSet<RefreshSession> RefreshSessions => Set<RefreshSession>();
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
@@ -35,6 +36,7 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts
 			builder.Entity<IdentityRoleClaim<Guid>>().ToTable("role_claims");
 			builder.Entity<IdentityUserRole<Guid>>().ToTable("user_roles");
 			builder.Entity<CrafterAccount>().ToTable("crafter_accounts");
+			builder.Entity<RefreshSession>().ToTable("refresh_sessions");
 			builder.HasDefaultSchema("accounts");
 
 			builder.Entity<CrafterAccount>()
@@ -78,6 +80,14 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts
 				.WithMany()
 				.HasForeignKey("role_id")
 				.IsRequired(true);
+
+			builder.Entity<RefreshSession>()
+				.HasKey(a => a.Id);
+
+			builder.Entity<RefreshSession>()
+				.HasOne(a => a.User)
+				.WithMany()
+				.HasForeignKey(a => a.UserId);
 		}
 
 		private ILoggerFactory CreateLoggerFactory()

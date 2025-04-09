@@ -1,4 +1,4 @@
-﻿namespace Dwarf_sMagicShop.Accounts.Infrastructure.Settings;
+﻿namespace Dwarf_sMagicShop.Accounts.Domain.Settings;
 
 public class AdminSettings
 {

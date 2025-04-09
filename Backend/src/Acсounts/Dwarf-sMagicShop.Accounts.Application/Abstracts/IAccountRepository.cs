@@ -12,4 +12,6 @@ public interface IAccountRepository
 	Task SaveAsync(CancellationToken cancellationToken);
 	Task<IEnumerable<Permission>> GetPermissionsAsync(User user, CancellationToken cancellationToken);
 	Task<Result<CrafterAccount, Error>> GetCrafterAccountAsync(Guid id, CancellationToken cancellationToken);
+	Task<Result<RefreshSession, Error>> GetRefreshSessionAsync(Guid refreshToken, CancellationToken cancellationToken);
+	Task DeleteRefreshSessionAsync(RefreshSession refreshSession);
 }

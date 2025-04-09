@@ -79,4 +79,26 @@ public class AccountRepository(AccountDbContext accountDbContext) : IAccountRepo
 
 		return crafterAccount;
 	}
+
+	public async Task<Result<RefreshSession, Error>> GetRefreshSessionAsync(
+		Guid refreshToken,
+		CancellationToken cancellationToken)
+	{
+		var refreshSession = await accountDbContext.RefreshSessions
+			.Where(a => a.RefreshToken == refreshToken)
+			.Include(a => a.User)
+			.ThenInclude(a => a.Role)
+			.FirstOrDefaultAsync(cancellationToken);
+
+		if (refreshSession == null)
+			return Errors.NotFound($"Refresh session {refreshToken}");
+
+		return refreshSession;
+	}
+
+	public async Task DeleteRefreshSessionAsync(RefreshSession refreshSession)
+	{
+		accountDbContext.RefreshSessions.Remove(refreshSession);
+		await accountDbContext.SaveChangesAsync();
+	}
 }

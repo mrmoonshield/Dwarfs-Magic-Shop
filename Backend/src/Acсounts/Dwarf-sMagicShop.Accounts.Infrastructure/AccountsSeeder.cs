@@ -1,6 +1,6 @@
 ﻿using Dwarf_sMagicShop.Accounts.Domain.Models;
+using Dwarf_sMagicShop.Accounts.Domain.Settings;
 using Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts;
-using Dwarf_sMagicShop.Accounts.Infrastructure.Settings;
 using Dwarf_sMagicShop.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

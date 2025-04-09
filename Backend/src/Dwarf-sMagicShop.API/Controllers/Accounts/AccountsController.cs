@@ -1,5 +1,6 @@
 ﻿using Dwarf_sMagicShop.Accounts.Application.Create;
 using Dwarf_sMagicShop.Accounts.Application.Login;
+using Dwarf_sMagicShop.Accounts.Application.Refresh;
 using Dwarf_sMagicShop.Accounts.Application.Requests;
 using Dwarf_sMagicShop.Accounts.Application.UpdateCrafter;
 using Dwarf_sMagicShop.Accounts.Domain.Attributes;
@@ -35,9 +36,24 @@ public class AccountsController : BaseController
 	}
 
 	[HttpPost("login")]
-	public async Task<ActionResult<string>> Login(
+	public async Task<ActionResult<LoginResponse>> Login(
 		[FromServices] LoginUserHandler handler,
 		[FromBody] AccountUserRequest request,
+		CancellationToken cancellationToken = default)
+	{
+		var result = await handler.ExecuteAsync(request, cancellationToken);
+
+		if (result.IsFailure)
+			return result.Error.ToResponse();
+
+		return result.Value;
+	}
+
+	[Permission(Permissions.READ_CRAFTER)]
+	[HttpPost("refresh")]
+	public async Task<ActionResult<LoginResponse>> RefreshTokens(
+		[FromServices] RefreshTokensHandler handler,
+		[FromBody] RefreshTokensRequest request,
 		CancellationToken cancellationToken = default)
 	{
 		var result = await handler.ExecuteAsync(request, cancellationToken);

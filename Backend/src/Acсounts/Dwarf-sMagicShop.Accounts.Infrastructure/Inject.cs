@@ -1,19 +1,17 @@
-﻿using Dwarf_sMagicShop.Accounts.Application.Abstracts;
+﻿using Dwarf_sMagicShop.Accounts.Application;
+using Dwarf_sMagicShop.Accounts.Application.Abstracts;
 using Dwarf_sMagicShop.Accounts.Application.Check;
 using Dwarf_sMagicShop.Accounts.Domain.Models;
+using Dwarf_sMagicShop.Accounts.Domain.Settings;
 using Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts;
 using Dwarf_sMagicShop.Accounts.Infrastructure.Providers;
 using Dwarf_sMagicShop.Accounts.Infrastructure.Repositories;
-using Dwarf_sMagicShop.Accounts.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace Dwarf_sMagicShop.Accounts.Infrastructure;
 
@@ -38,6 +36,7 @@ public static class Inject
 	{
 		builder.Services
 			.Configure<JwtSettings>(builder.Configuration.GetSection(nameof(JwtSettings)))
+			.Configure<RefreshSettings>(builder.Configuration.GetSection(nameof(RefreshSettings)))
 			.Configure<AdminSettings>(builder.Configuration.GetSection(AdminSettings.ADMIN));
 
 		AddJwtBearerService(builder);
@@ -71,16 +70,8 @@ public static class Inject
 				var jwtSettings = builder.Configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>()
 				?? throw JwtSettings.GetException();
 
-				options.TokenValidationParameters = new TokenValidationParameters
-				{
-					ValidIssuer = jwtSettings.Issuer,
-					ValidAudience = jwtSettings.Audience,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
-					ValidateLifetime = true,
-					ValidateIssuer = true,
-					ValidateAudience = true,
-					ValidateIssuerSigningKey = true
-				};
+				options.TokenValidationParameters = JwtParametersFactory
+				.GetTokenValidationParameters(jwtSettings, true);
 			});
 	}
 }

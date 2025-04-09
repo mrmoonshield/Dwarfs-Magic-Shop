@@ -7,7 +7,7 @@ using Dwarf_sMagicShop.Core.ErrorsHelpers;
 
 namespace Dwarf_sMagicShop.Accounts.Application.Login;
 
-public class LoginUserHandler : IResultHandler<string, AccountUserRequest>
+public class LoginUserHandler : IResultHandler<LoginResponse, AccountUserRequest>
 {
 	private readonly ExistingAccountValidator existingAccountValidator;
 	private readonly ITokenProvider tokenProvider;
@@ -20,7 +20,7 @@ public class LoginUserHandler : IResultHandler<string, AccountUserRequest>
 		this.tokenProvider = tokenProvider;
 	}
 
-	public async Task<Result<string, ErrorsList>> ExecuteAsync(AccountUserRequest request, CancellationToken cancellationToken)
+	public async Task<Result<LoginResponse, ErrorsList>> ExecuteAsync(AccountUserRequest request, CancellationToken cancellationToken)
 	{
 		var userResult = await existingAccountValidator
 			.CheckAccountWithPasswordAsync(request.UserName, request.Password, cancellationToken);
@@ -28,6 +28,13 @@ public class LoginUserHandler : IResultHandler<string, AccountUserRequest>
 		if (userResult.IsFailure)
 			return userResult.Error.ToErrorsList();
 
-		return tokenProvider.GenerateAccessToken(userResult.Value!, cancellationToken);
+		var accessToken = tokenProvider.GenerateAccessToken(userResult.Value!);
+
+		var refreshToken = await tokenProvider.GenerateRefreshTokenAsync(
+			userResult.Value!, 
+			accessToken.jti, 
+			cancellationToken);
+
+		return new LoginResponse(accessToken.token, refreshToken);
 	}
 }
