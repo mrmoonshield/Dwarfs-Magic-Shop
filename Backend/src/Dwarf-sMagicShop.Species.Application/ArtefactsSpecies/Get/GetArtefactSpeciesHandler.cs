@@ -9,9 +9,9 @@ namespace Dwarf_sMagicShop.Species.Application.ArtefactsSpecies.Get;
 
 public class GetArtefactSpeciesHandler : IResultHandler<IReadOnlyCollection<ArtefactSpeciesDto>>
 {
-	private readonly IReadDbContextCrafter readDbContext;
+	private readonly IReadDbContextSpecies readDbContext;
 
-	public GetArtefactSpeciesHandler(IReadDbContextCrafter readDbContext)
+	public GetArtefactSpeciesHandler(IReadDbContextSpecies readDbContext)
 	{
 		this.readDbContext = readDbContext;
 	}

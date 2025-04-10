@@ -2,19 +2,19 @@
 using Dwarf_sMagicShop.Core.Database;
 using Dwarf_sMagicShop.Core.Dtos;
 using Dwarf_sMagicShop.Core.ErrorsHelpers;
-using Dwarf_sMagicShop.Crafters.Infrastructure.DbContexts;
 using Dwarf_sMagicShop.Species.Application.ArtefactsSpecies;
 using Dwarf_sMagicShop.Species.Domain.Models;
+using Dwarf_sMagicShop.Species.Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dwarf_sMagicShop.Species.Infrastructure.Repositories;
 
 public class SpeciesRepository : ISpeciesRepository
 {
-	private readonly WriteDbContextCrafters dbContext;
-	private readonly IReadDbContextCrafter readDbContext;
+	private readonly WriteDbContextSpecies dbContext;
+	private readonly IReadDbContextSpecies readDbContext;
 
-	public SpeciesRepository(WriteDbContextCrafters dbContext, IReadDbContextCrafter readDbContext)
+	public SpeciesRepository(WriteDbContextSpecies dbContext, IReadDbContextSpecies readDbContext)
 	{
 		this.dbContext = dbContext;
 		this.readDbContext = readDbContext;

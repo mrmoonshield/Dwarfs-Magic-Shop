@@ -43,7 +43,7 @@ public class UpdateMagicArtefactInfoHandler : IUnitResultHandler<Guid, Guid, Upd
 		var speciesResult = await SpeciesShared.CheckSpecies(command.Species!, speciesRepository, cancellationToken);
 
 		existResult.Value.artefact.UpdateInfo(
-			speciesResult.Value.Id,
+			speciesResult.Value.Id.Value,
 			command.Effect,
 			command.RareType,
 			command.Location,

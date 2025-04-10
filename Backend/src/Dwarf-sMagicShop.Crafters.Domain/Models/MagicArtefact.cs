@@ -2,7 +2,6 @@
 using Dwarf_sMagicShop.Core.Entities;
 using Dwarf_sMagicShop.Core.Enums;
 using Dwarf_sMagicShop.Core.ErrorsHelpers;
-using Dwarf_sMagicShop.Species.Domain.Models;
 
 namespace Dwarf_sMagicShop.Crafters.Domain.Models;
 
@@ -17,7 +16,7 @@ public class MagicArtefact : SoftDeletableEntity<MagicArtefactID>
 
 	public string Name { get; private set; }
 	public string Description { get; private set; }
-	public ArtefactSpeciesID SpeciesId { get; private set; } = default!;
+	public Guid? SpeciesId { get; private set; } = default!;
 	public string Effect { get; private set; } = default!;
 	public ArtefactRareType Rare { get; private set; } = default!;
 	public string Location { get; private set; } = default!;
@@ -56,7 +55,7 @@ public class MagicArtefact : SoftDeletableEntity<MagicArtefactID>
 	public void AddImageFile(File file) => ImageFile = file;
 
 	public void UpdateInfo(
-		ArtefactSpeciesID? speciesID,
+		Guid? speciesID,
 		string? effect,
 		ArtefactRareType? rareType,
 		string? location,

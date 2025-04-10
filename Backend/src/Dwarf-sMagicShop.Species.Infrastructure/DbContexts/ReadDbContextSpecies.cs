@@ -1,25 +1,30 @@
-﻿namespace Dwarf_sMagicShop.Species.Infrastructure.DbContexts;
+﻿using Dwarf_sMagicShop.Core.Database;
+using Dwarf_sMagicShop.Core.Dtos;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-public class ReadDbContextSpecies/*(string connectionString) : DbContext, IReadDbContextSpecies*/
+namespace Dwarf_sMagicShop.Species.Infrastructure.DbContexts;
+
+public class ReadDbContextSpecies(string connectionString) : DbContext, IReadDbContextSpecies
 {
-	//public IQueryable<ArtefactSpeciesDto> ArtefactSpecies => Set<ArtefactSpeciesDto>();
+	public IQueryable<ArtefactSpeciesDto> ArtefactSpecies => Set<ArtefactSpeciesDto>();
 
-	//protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-	//{
-	//	optionsBuilder.UseNpgsql(connectionString);
-	//	optionsBuilder.UseSnakeCaseNamingConvention();
-	//	optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
-	//	optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-	//}
+	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+	{
+		optionsBuilder.UseNpgsql(connectionString);
+		optionsBuilder.UseSnakeCaseNamingConvention();
+		optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
+		optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+	}
 
-	//protected override void OnModelCreating(ModelBuilder modelBuilder)
-	//{
-	//	modelBuilder.ApplyConfigurationsFromAssembly(typeof(WriteDbContextSpecies).Assembly,
-	//		type => type.FullName?.Contains("Read") ?? false);
-	//}
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		modelBuilder.ApplyConfigurationsFromAssembly(typeof(WriteDbContextSpecies).Assembly,
+			type => type.FullName?.Contains("Read") ?? false);
+	}
 
-	//private ILoggerFactory CreateLoggerFactory()
-	//{
-	//	return LoggerFactory.Create(builder => builder.AddConsole());
-	//}
+	private ILoggerFactory CreateLoggerFactory()
+	{
+		return LoggerFactory.Create(builder => builder.AddConsole());
+	}
 }

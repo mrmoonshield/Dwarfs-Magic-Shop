@@ -1,5 +1,4 @@
 ﻿using Dwarf_sMagicShop.Crafters.Domain.Models;
-using Dwarf_sMagicShop.Species.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -26,9 +25,6 @@ public class MagicArtefactConfiguration : IEntityTypeConfiguration<MagicArtefact
 			.HasMaxLength(Core.Constants.MAX_HIGH_TEXT_LENGHT);
 
 		builder.Property(a => a.SpeciesId)
-			.HasConversion(
-				id => id.Value,
-				value => ArtefactSpeciesID.Create(value))
 			.IsRequired(false);
 
 		builder.Property(a => a.Effect).IsRequired(false);

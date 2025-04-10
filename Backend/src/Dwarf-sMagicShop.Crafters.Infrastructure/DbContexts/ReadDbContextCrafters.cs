@@ -9,7 +9,6 @@ public class ReadDbContextCrafters(string connectionString) : DbContext, IReadDb
 {
 	public IQueryable<CrafterDto> Crafters => Set<CrafterDto>();
 	public IQueryable<MagicArtefactDto> MagicArtefacts => Set<MagicArtefactDto>();
-	public IQueryable<ArtefactSpeciesDto> ArtefactSpecies => Set<ArtefactSpeciesDto>();
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 	{

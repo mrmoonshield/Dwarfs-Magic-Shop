@@ -95,7 +95,7 @@ public class CreateMagicArtefactHandler : IResultHandler<MagicArtefact, CreateMa
 			}
 
 			createArtefactResult.Value.UpdateInfo(
-				artefactSpeciesID,
+				artefactSpeciesID.Value,
 				artefactCommand.UpdateRequest.Effect,
 				artefactCommand.UpdateRequest.RareType,
 				artefactCommand.UpdateRequest.Location,

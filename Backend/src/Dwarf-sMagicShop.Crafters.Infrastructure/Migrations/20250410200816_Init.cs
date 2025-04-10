@@ -6,26 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Dwarf_sMagicShop.Crafters.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class CraftersInit : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
                 name: "crafters");
-
-            migrationBuilder.CreateTable(
-                name: "artefacts_species",
-                schema: "crafters",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_artefacts_species", x => x.id);
-                });
 
             migrationBuilder.CreateTable(
                 name: "crafter_balance",
@@ -101,10 +88,6 @@ namespace Dwarf_sMagicShop.Crafters.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "artefacts_species",
-                schema: "crafters");
-
             migrationBuilder.DropTable(
                 name: "crafter_balance",
                 schema: "crafters");

@@ -160,24 +160,6 @@ namespace Dwarf_sMagicShop.Crafters.Infrastructure.Migrations
                     b.ToTable("magic_artefacts", "crafters");
                 });
 
-            modelBuilder.Entity("Dwarf_sMagicShop.Species.Domain.Models.ArtefactSpecies", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_artefacts_species");
-
-                    b.ToTable("artefacts_species", "crafters");
-                });
-
             modelBuilder.Entity("Dwarf_sMagicShop.Crafters.Domain.Models.MagicArtefact", b =>
                 {
                     b.HasOne("Dwarf_sMagicShop.Crafters.Domain.Models.Crafter", null)

@@ -6,6 +6,5 @@ namespace Dwarf_sMagicShop.Core.Database
 	{
 		IQueryable<CrafterDto> Crafters { get; }
 		IQueryable<MagicArtefactDto> MagicArtefacts { get; }
-		IQueryable<ArtefactSpeciesDto> ArtefactSpecies { get; }
 	}
 }

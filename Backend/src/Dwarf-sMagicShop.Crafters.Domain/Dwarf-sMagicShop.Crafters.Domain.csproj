@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dwarf-sMagicShop.Shared\Dwarf-sMagicShop.Core.csproj" />
-    <ProjectReference Include="..\Dwarf-sMagicShop.Species.Domain\Dwarf-sMagicShop.Species.Domain.csproj" />
   </ItemGroup>
 
 </Project>
