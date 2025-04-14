@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountDbContext))]
-    [Migration("20250409092740_Accounts_AddRefresh")]
-    partial class Accounts_AddRefresh
+    [Migration("20250414083618_Accounts_Init")]
+    partial class Accounts_Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -90,6 +90,10 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.Migrations
                     b.Property<DateTime>("ExpiresIn")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("expires_in");
+
+                    b.Property<Guid>("Jti")
+                        .HasColumnType("uuid")
+                        .HasColumnName("jti");
 
                     b.Property<Guid>("RefreshToken")
                         .HasColumnType("uuid")

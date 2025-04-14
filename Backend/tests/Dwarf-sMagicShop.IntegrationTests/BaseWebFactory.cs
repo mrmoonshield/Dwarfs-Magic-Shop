@@ -1,8 +1,10 @@
 ﻿using Dwarf_sMagicShop.Core.Database;
 using Dwarf_sMagicShop.Crafters.Infrastructure.DbContexts;
+using Dwarf_sMagicShop.Species.Infrastructure.DbContexts;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Npgsql;
@@ -39,18 +41,26 @@ public class BaseWebFactory : WebApplicationFactory<Program>, IAsyncLifetime
 		collection.RemoveAll(typeof(WriteDbContextCrafters));
 
 		collection.AddScoped<WriteDbContextCrafters>(a => new WriteDbContextCrafters(container.GetConnectionString()));
-		collection.AddScoped<IReadDbContextCrafter, ReadDbContextCrafters>(a => new ReadDbContextCrafters(container.GetConnectionString()));
+		collection.AddScoped<IReadDbContextCrafter, ReadDbContextCrafters>(
+			a => new ReadDbContextCrafters(container.GetConnectionString()));
 
-		//collection.AddScoped<WriteDbContextSpecies>(a => new WriteDbContextSpecies(container.GetConnectionString()));
-		//collection.AddScoped<IReadDbContextSpecies, ReadDbContextSpecies>(a => new ReadDbContextSpecies(container.GetConnectionString()));
+		collection.RemoveAll(typeof(IReadDbContextSpecies));
+		collection.RemoveAll(typeof(WriteDbContextSpecies));
+
+		collection.AddScoped<WriteDbContextSpecies>(a => new WriteDbContextSpecies(container.GetConnectionString()));
+		collection.AddScoped<IReadDbContextSpecies, ReadDbContextSpecies>(
+			a => new ReadDbContextSpecies(container.GetConnectionString()));
 	}
 
 	public virtual async Task InitializeAsync()
 	{
 		await container.StartAsync();
 		using var scope = Services.CreateScope();
-		var dbContext = scope.ServiceProvider.GetRequiredService<WriteDbContextCrafters>();
-		await dbContext.Database.EnsureCreatedAsync();
+		var dbContextCrafters = scope.ServiceProvider.GetRequiredService<WriteDbContextCrafters>();
+		await dbContextCrafters.Database.EnsureCreatedAsync();
+		var dbContextSpecies = scope.ServiceProvider.GetRequiredService<WriteDbContextSpecies>();
+		await dbContextSpecies.Database.EnsureCreatedAsync();
+		await dbContextSpecies.Database.MigrateAsync();
 		await InitializeRespawnerAsync();
 	}
 

@@ -57,7 +57,8 @@ public class SpeciesRepository : ISpeciesRepository
 		var species = await dbContext.ArtefactSpecies
 			.FirstOrDefaultAsync(a => a.Name == name, cancellationToken);
 
-		if (species == null) return Errors.NotFound("Name");
+		if (species == null) 
+			return Errors.NotFound("Name");
 		return species;
 	}
 

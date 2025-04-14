@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dwarf_sMagicShop.Crafters.Infrastructure.Migrations
 {
     [DbContext(typeof(WriteDbContextCrafters))]
-    [Migration("20250410200816_Init")]
-    partial class Init
+    [Migration("20250414083437_Crafters_Init")]
+    partial class Crafters_Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

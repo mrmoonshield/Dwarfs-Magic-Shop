@@ -15,7 +15,7 @@ public class BaseFixtureTests<TWebFactory> : IClassFixture<TWebFactory>, IAsyncL
 	protected readonly IServiceScope scope;
 	protected readonly IReadDbContextCrafter readDbContextCrafters;
 
-	//protected readonly IReadDbContextSpecies readDbContextSpecies;
+	protected readonly IReadDbContextSpecies readDbContextSpecies;
 	protected readonly Fixture fixture;
 
 	protected readonly TWebFactory factory;
@@ -25,7 +25,7 @@ public class BaseFixtureTests<TWebFactory> : IClassFixture<TWebFactory>, IAsyncL
 	{
 		scope = factory.Services.CreateScope();
 		readDbContextCrafters = scope.ServiceProvider.GetRequiredService<IReadDbContextCrafter>();
-		//readDbContextSpecies = scope.ServiceProvider.GetRequiredService<IReadDbContextSpecies>();
+		readDbContextSpecies = scope.ServiceProvider.GetRequiredService<IReadDbContextSpecies>();
 		fixture = new Fixture();
 		this.factory = factory;
 		crafterRepository = scope.ServiceProvider.GetRequiredService<ICrafterRepository>();

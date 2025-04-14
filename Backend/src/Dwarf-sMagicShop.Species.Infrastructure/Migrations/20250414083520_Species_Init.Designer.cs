@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dwarf_sMagicShop.Species.Infrastructure.Migrations
 {
     [DbContext(typeof(WriteDbContextSpecies))]
-    [Migration("20250410201210_Species_Init")]
+    [Migration("20250414083520_Species_Init")]
     partial class Species_Init
     {
         /// <inheritdoc />
