@@ -1,4 +1,17 @@
 services:
+  dwarf-smagicshop.api:
+    build:
+      context: .
+      dockerfile: src/Dwarf-sMagicShop.API/Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+      - seq
+      - minio
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
   postgres:
     image: postgres
     container_name: dwarf_s_magic_shop_postgres
@@ -30,7 +43,18 @@ services:
     volumes:
       - minio_data:/data
     command: server --console-address ":9001" /data
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+    depends_on:
+      - dwarf-smagicshop.api
+    restart: always
+
 
 volumes:
   postgres-data:
   minio_data:
+

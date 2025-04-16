@@ -5,20 +5,26 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
-EXPOSE 8081
 
 
 # Этот этап используется для сборки проекта службы
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Dwarf-sMagicShop.API/Dwarf-sMagicShop.API.csproj", "Dwarf-sMagicShop.API/"]
-COPY ["Dwarf-sMagicShop.Application/Dwarf-sMagicShop.Application.csproj", "Dwarf-sMagicShop.Application/"]
-COPY ["Dwarf-sMagicShop.Domain/Dwarf-sMagicShop.Domain.csproj", "Dwarf-sMagicShop.Domain/"]
-COPY ["Dwarf-sMagicShop.Infrastructure/Dwarf-sMagicShop.Infrastructure.csproj", "Dwarf-sMagicShop.Infrastructure/"]
-RUN dotnet restore "./Dwarf-sMagicShop.API/Dwarf-sMagicShop.API.csproj"
+COPY ["src/Dwarf-sMagicShop.API/Dwarf-sMagicShop.API.csproj", "src/Dwarf-sMagicShop.API/"]
+COPY ["src/Acсounts/Dwarf-sMagicShop.Accounts.Domain/Dwarf-sMagicShop.Accounts.Domain.csproj", "src/Acсounts/Dwarf-sMagicShop.Accounts.Domain/"]
+COPY ["src/Dwarf-sMagicShop.Shared/Dwarf-sMagicShop.Core.csproj", "src/Dwarf-sMagicShop.Shared/"]
+COPY ["src/Acсounts/Dwarf-sMagicShop.Accounts.Infrastructure/Dwarf-sMagicShop.Accounts.Infrastructure.csproj", "src/Acсounts/Dwarf-sMagicShop.Accounts.Infrastructure/"]
+COPY ["src/Acсounts/Dwarf-sMagicShop.Accounts.Application/Dwarf-sMagicShop.Accounts.Application.csproj", "src/Acсounts/Dwarf-sMagicShop.Accounts.Application/"]
+COPY ["src/Dwarf-sMagicShop.Crafters.Application/Dwarf-sMagicShop.Crafters.Application.csproj", "src/Dwarf-sMagicShop.Crafters.Application/"]
+COPY ["src/Dwarf-sMagicShop.Crafters.Domain/Dwarf-sMagicShop.Crafters.Domain.csproj", "src/Dwarf-sMagicShop.Crafters.Domain/"]
+COPY ["src/Dwarf-sMagicShop.Species.Application/Dwarf-sMagicShop.Species.Application.csproj", "src/Dwarf-sMagicShop.Species.Application/"]
+COPY ["src/Dwarf-sMagicShop.Species.Domain/Dwarf-sMagicShop.Species.Domain.csproj", "src/Dwarf-sMagicShop.Species.Domain/"]
+COPY ["src/Dwarf-sMagicShop.Crafters.Infrastructure/Dwarf-sMagicShop.Crafters.Infrastructure.csproj", "src/Dwarf-sMagicShop.Crafters.Infrastructure/"]
+COPY ["src/Dwarf-sMagicShop.Species.Infrastructure/Dwarf-sMagicShop.Species.Infrastructure.csproj", "src/Dwarf-sMagicShop.Species.Infrastructure/"]
+RUN dotnet restore "./src/Dwarf-sMagicShop.API/Dwarf-sMagicShop.API.csproj"
 COPY . .
-WORKDIR "/src/Dwarf-sMagicShop.API"
+WORKDIR "/src/src/Dwarf-sMagicShop.API"
 RUN dotnet build "./Dwarf-sMagicShop.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Этот этап используется для публикации проекта службы, который будет скопирован на последний этап
