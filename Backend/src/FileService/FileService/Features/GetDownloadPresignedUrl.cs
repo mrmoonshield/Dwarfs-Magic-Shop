@@ -5,33 +5,28 @@ using FileService.Shared;
 
 namespace FileService.Features;
 
-public static class GetUploadPresignedUrl
+public static class GetDownloadPresignedUrl
 {
-	private record UploadPresignedRequest(string FileName, string ContentType, long Size);
-
 	public sealed class Endpoint : IEndpoint
 	{
 		public void MapEndpoint(IEndpointRouteBuilder app)
 		{
-			app.MapPost("files/presigned-url", ExecuteAsync);
+			app.MapPost("files/{key:guid}/presigned-url", ExecuteAsync);
 		}
 	}
 
 	private static async Task<IResult> ExecuteAsync(
-		UploadPresignedRequest request,
-		IAmazonS3 amazonS3)
+		IAmazonS3 amazonS3,
+		Guid key)
 	{
 		try
 		{
-			var key = Guid.NewGuid();
-
 			var getPreSignedUrlRequest = new GetPreSignedUrlRequest
 			{
 				BucketName = Constants.BUCKET_NAME_VIDEOS,
 				Key = key.ToString(),
 				Expires = DateTime.UtcNow.AddHours(24),
-				Verb = HttpVerb.PUT,
-				ContentType = request.ContentType,
+				Verb = HttpVerb.GET,
 				Protocol = Protocol.HTTP,
 			};
 

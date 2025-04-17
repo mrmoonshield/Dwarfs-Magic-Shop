@@ -5,15 +5,15 @@ using FileService.Shared;
 
 namespace FileService.Features;
 
-public static class GetUploadPresignedUrl
+public static class GetMultipartUploadPresignedUrl
 {
-	private record UploadPresignedRequest(string FileName, string ContentType, long Size);
+	private record UploadPresignedRequest(string UploadId, int PartNumber);
 
 	public sealed class Endpoint : IEndpoint
 	{
 		public void MapEndpoint(IEndpointRouteBuilder app)
 		{
-			app.MapPost("files/presigned-url", ExecuteAsync);
+			app.MapPost("files/multipart-presigned-url", ExecuteAsync);
 		}
 	}
 
@@ -31,8 +31,9 @@ public static class GetUploadPresignedUrl
 				Key = key.ToString(),
 				Expires = DateTime.UtcNow.AddHours(24),
 				Verb = HttpVerb.PUT,
-				ContentType = request.ContentType,
 				Protocol = Protocol.HTTP,
+				UploadId = request.UploadId,
+				PartNumber = request.PartNumber,
 			};
 
 			var url = await amazonS3.GetPreSignedURLAsync(getPreSignedUrlRequest);
@@ -40,7 +41,7 @@ public static class GetUploadPresignedUrl
 		}
 		catch (AmazonS3Exception ex)
 		{
-			return Results.BadRequest($"Generating presigned url failed: {ex}");
+			return Results.BadRequest($"Generating multipart presigned url failed: {ex}");
 		}
 	}
 }
