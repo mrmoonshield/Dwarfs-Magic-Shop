@@ -48,4 +48,9 @@ public static class Errors
 	{
 		return Error.Failure("invalid.operation", message);
 	}
+
+	public static Error Failure(string message)
+	{
+		return Error.Failure("failure", message);
+	}
 }

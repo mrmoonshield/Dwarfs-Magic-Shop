@@ -1,5 +1,7 @@
 using Amazon.S3;
 using FileService.Endpoints;
+using FileService.MongoDbDataAccess;
+using MongoDB.Driver;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +24,9 @@ builder.Services.AddSingleton<IAmazonS3>(a =>
 	return new AmazonS3Client("minioadmin", "minioadmin", config);
 });
 
+builder.Services.AddSingleton<IMongoClient>(new MongoClient(builder.Configuration.GetConnectionString("Mongodb")));
+builder.Services.AddScoped<MongoDbContext>();
+builder.Services.AddScoped<MongoDbFileRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

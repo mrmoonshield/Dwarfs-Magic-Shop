@@ -1,6 +1,8 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
 using FileService.Endpoints;
+using FileService.Models;
+using FileService.MongoDbDataAccess;
 using FileService.Shared;
 
 namespace FileService.Features;
@@ -22,10 +24,13 @@ public static class CompleteMultipartUpload
 		CompleteMultipartRequest request,
 		Guid key,
 		IAmazonS3 amazonS3,
+		MongoDbFileRepository mongoDbFileRepository,
 		CancellationToken cancellationToken)
 	{
 		try
 		{
+			var fileId = Guid.NewGuid();
+
 			var completeMultipartUploadRequest = new CompleteMultipartUploadRequest
 			{
 				BucketName = Constants.BUCKET_NAME_VIDEOS,
@@ -34,7 +39,19 @@ public static class CompleteMultipartUpload
 				PartETags = request.Parts.Select(a => new PartETag(a.PartNumber, a.ETag)).ToList()
 			};
 
-			var url = await amazonS3.CompleteMultipartUploadAsync(completeMultipartUploadRequest, cancellationToken);
+			var uploadResponse = await amazonS3.CompleteMultipartUploadAsync(completeMultipartUploadRequest, cancellationToken);
+			var metadataResponse = await amazonS3.GetObjectMetadataAsync(Constants.BUCKET_NAME_VIDEOS, key.ToString(), cancellationToken);
+
+			var fileData = new FileData
+			{
+				Id = fileId,
+				ContentType = metadataResponse.Headers.ContentType,
+				UploadDate = DateTime.UtcNow,
+				FileSize = uploadResponse.ContentLength,
+				Path = key.ToString()
+			};
+
+			await mongoDbFileRepository.AddFileAsync(fileData, cancellationToken);
 			return Results.Ok(key);
 		}
 		catch (AmazonS3Exception ex)
