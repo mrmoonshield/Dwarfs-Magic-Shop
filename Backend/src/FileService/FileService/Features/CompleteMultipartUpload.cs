@@ -39,8 +39,13 @@ public static class CompleteMultipartUpload
 				PartETags = request.Parts.Select(a => new PartETag(a.PartNumber, a.ETag)).ToList()
 			};
 
-			var uploadResponse = await amazonS3.CompleteMultipartUploadAsync(completeMultipartUploadRequest, cancellationToken);
-			var metadataResponse = await amazonS3.GetObjectMetadataAsync(Constants.BUCKET_NAME_VIDEOS, key.ToString(), cancellationToken);
+			var uploadResponse = await amazonS3.CompleteMultipartUploadAsync(
+				completeMultipartUploadRequest, 
+				cancellationToken);
+
+			var metadataResponse = await amazonS3.GetObjectMetadataAsync(
+				Constants.BUCKET_NAME_VIDEOS, key.ToString(), 
+				cancellationToken);
 
 			var fileData = new FileData
 			{
