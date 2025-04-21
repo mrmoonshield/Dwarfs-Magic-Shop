@@ -40,7 +40,7 @@ public class UpdateMagicArtefactInfoHandler : IUnitResultHandler<Guid, Guid, Upd
 		if (!commandValidationResult.IsValid)
 			return commandValidationResult.ToErrorsList();
 
-		var speciesResult = await SpeciesShared.CheckSpecies(command.Species!, speciesRepository, cancellationToken);
+		var speciesResult = await SpeciesShared.CheckSpeciesAsync(command.Species!, speciesRepository, cancellationToken);
 
 		existResult.Value.artefact.UpdateInfo(
 			speciesResult.Value.Id.Value,
