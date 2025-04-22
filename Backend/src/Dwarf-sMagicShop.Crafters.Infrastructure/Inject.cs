@@ -10,6 +10,7 @@ using Dwarf_sMagicShop.Crafters.Infrastructure.MessageQueues;
 using Dwarf_sMagicShop.Crafters.Infrastructure.Providers;
 using Dwarf_sMagicShop.Crafters.Infrastructure.Repositories;
 using Dwarf_sMagicShop.Crafters.Infrastructure.SettingsModels;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +32,8 @@ public static class Inject
 			.AddScoped<SoftDeleteSettings>()
 			.AddScoped<IFileProvider, MinioProvider>()
 			.AddScoped<IDatabaseTransactionProvider, DatabaseTransactionProvider>()
-			.AddSingleton<IMessageQueue<string>, InMemoryMessageQueue<string>>();
+			.AddSingleton<IMessageQueue<string>, InMemoryMessageQueue<string>>()
+			.AddMassTransitConfiguration(configuration);
 
 		return services;
 	}
@@ -62,5 +64,27 @@ public static class Inject
 
 		builder.Services.AddMinio(builder.Configuration);
 		return builder;
+	}
+
+	private static IServiceCollection AddMassTransitConfiguration(
+		this IServiceCollection services,
+		IConfiguration configuration)
+	{
+		return services.AddMassTransit(a =>
+		{
+			a.SetKebabCaseEndpointNameFormatter();
+
+			a.UsingRabbitMq((context, cfg) =>
+			{
+				cfg.Host(new Uri(configuration["RabbitMQ:Host"]!), hconfig =>
+				{
+					hconfig.Username(configuration["RabbitMQ:Username"]!);
+					hconfig.Password(configuration["RabbitMQ:Password"]!);
+				});
+
+				cfg.Durable = true;
+				cfg.ConfigureEndpoints(context);
+			});
+		});
 	}
 }

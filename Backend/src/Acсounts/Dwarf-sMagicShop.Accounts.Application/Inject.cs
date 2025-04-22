@@ -2,6 +2,8 @@
 using Dwarf_sMagicShop.Core.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
+using MassTransit;
+using Dwarf_sMagicShop.Accounts.Application.Create;
 
 namespace Dwarf_sMagicShop.Accounts.Application;
 
@@ -14,7 +16,8 @@ public static class Inject
 			.AddUnitResultHandlersAccounts()
 			.AddQueryHandlersAccounts()
 			.AddScoped<ExistingAccountValidator>()
-			.AddValidatorsFromAssembly(typeof(Inject).Assembly);
+			.AddValidatorsFromAssembly(typeof(Inject).Assembly)
+			.AddConsumers();
 	}
 
 	public static IServiceCollection AddResultHandlersAccounts(this IServiceCollection services)
@@ -48,5 +51,18 @@ public static class Inject
 						typeof(IQueryHandler<,,>)))
 					.AsSelfWithInterfaces()
 					.WithScopedLifetime());
+	}
+
+	private static IServiceCollection AddConsumers(this IServiceCollection services)
+	{
+		return services.AddMassTransit(x =>
+		{
+			x.AddConsumer<CreateCrafterAccountHandler>();
+
+			x.UsingInMemory((context, cfg) =>
+			{
+				cfg.ConfigureEndpoints(context);
+			});
+		});
 	}
 }

@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.14" />
     <PackageReference Include="Scrutor" Version="6.0.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
@@ -16,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Dwarf-sMagicShop.Shared\Dwarf-sMagicShop.Core.csproj" />
+    <ProjectReference Include="..\..\Dwarfs-Magic-Shop.Shared.Contracts\Dwarfs-Magic-Shop.Shared.Contracts.csproj" />
     <ProjectReference Include="..\Dwarf-sMagicShop.Accounts.Domain\Dwarf-sMagicShop.Accounts.Domain.csproj" />
   </ItemGroup>
 

@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
     <PackageReference Include="Scrutor" Version="6.0.1" />
@@ -18,6 +19,7 @@
     <ProjectReference Include="..\Dwarf-sMagicShop.Crafters.Domain\Dwarf-sMagicShop.Crafters.Domain.csproj" />
     <ProjectReference Include="..\Dwarf-sMagicShop.Shared\Dwarf-sMagicShop.Core.csproj" />
     <ProjectReference Include="..\Dwarf-sMagicShop.Species.Application\Dwarf-sMagicShop.Species.Application.csproj" />
+    <ProjectReference Include="..\Dwarfs-Magic-Shop.Shared.Contracts\Dwarfs-Magic-Shop.Shared.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

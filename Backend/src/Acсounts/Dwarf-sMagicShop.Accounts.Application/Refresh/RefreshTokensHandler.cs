@@ -1,13 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using Dwarf_sMagicShop.Accounts.Application.Abstracts;
 using Dwarf_sMagicShop.Accounts.Application.Login;
-using Dwarf_sMagicShop.Accounts.Domain.Models;
 using Dwarf_sMagicShop.Accounts.Domain.Settings;
 using Dwarf_sMagicShop.Core;
 using Dwarf_sMagicShop.Core.Abstractions;
 using Dwarf_sMagicShop.Core.ErrorsHelpers;
 using Dwarf_sMagicShop.Core.Extensions;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -16,7 +14,6 @@ namespace Dwarf_sMagicShop.Accounts.Application.Refresh;
 public class RefreshTokensHandler(
 	IAccountRepository accountRepository,
 	IOptions<JwtSettings> jwtOptions,
-	UserManager<User> userManager,
 	ITokenProvider tokenProvider) : IResultHandler<LoginResponse, RefreshTokensRequest>
 {
 	public async Task<Result<LoginResponse, ErrorsList>> ExecuteAsync(
