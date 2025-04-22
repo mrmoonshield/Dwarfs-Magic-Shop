@@ -5,24 +5,25 @@ using Dwarf_sMagicShop.Core.Extensions;
 using Dwarf_sMagicShop.Core.Validators;
 using Dwarf_sMagicShop.Crafters.Application.Crafters;
 using Dwarf_sMagicShop.Crafters.Application.Validators;
-using Dwarf_sMagicShop.Species.Application.ArtefactsSpecies;
+using Dwarfs_Magic_Shop.Shared.Contracts.MediatRRequests.MagicArtefacts;
+using MediatR;
 
 namespace Dwarf_sMagicShop.Crafters.Application.MagicArtefacts.Update.Info;
 
 public class UpdateMagicArtefactInfoHandler : IUnitResultHandler<Guid, Guid, UpdateMagicArtefactRequest>
 {
 	private readonly ValidatorsProvider validatorsProvider;
-	private readonly ISpeciesRepository speciesRepository;
 	private readonly ICrafterRepository crafterRepository;
+	private readonly IMediator mediator;
 
 	public UpdateMagicArtefactInfoHandler(
 		ValidatorsProvider validatorsProvider,
-		ISpeciesRepository speciesRepository,
-		ICrafterRepository crafterRepository)
+		ICrafterRepository crafterRepository,
+		IMediator mediator)
 	{
 		this.validatorsProvider = validatorsProvider;
-		this.speciesRepository = speciesRepository;
 		this.crafterRepository = crafterRepository;
+		this.mediator = mediator;
 	}
 
 	public async Task<UnitResult<ErrorsList>> ExecuteAsync(Guid crafterId, Guid artefactId, UpdateMagicArtefactRequest command, CancellationToken cancellationToken)
@@ -40,10 +41,22 @@ public class UpdateMagicArtefactInfoHandler : IUnitResultHandler<Guid, Guid, Upd
 		if (!commandValidationResult.IsValid)
 			return commandValidationResult.ToErrorsList();
 
-		var speciesResult = await SpeciesShared.CheckSpeciesAsync(command.Species!, speciesRepository, cancellationToken);
+		Guid? speciesGuid = null;
+
+		if (command.Species != null)
+		{
+			var speciesGuidResult = await mediator.Send(new GetSpeciesGuidRequest(
+							command.Species),
+							cancellationToken);
+
+			if (speciesGuidResult.IsFailure)
+				return speciesGuidResult.Error;
+
+			speciesGuid = speciesGuidResult.Value;
+		}
 
 		existResult.Value.artefact.UpdateInfo(
-			speciesResult.Value.Id.Value,
+			speciesGuid,
 			command.Effect,
 			command.RareType,
 			command.Location,

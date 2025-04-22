@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Dwarf_sMagicShop.Core.ErrorsHelpers;
-using Dwarf_sMagicShop.Core.MediatRRequests.MagicArtefacts;
+using Dwarfs_Magic_Shop.Shared.Contracts.MediatRRequests.MagicArtefacts;
 using MediatR;
 
 namespace Dwarf_sMagicShop.Species.Application.ArtefactsSpecies.Create;

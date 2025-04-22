@@ -3,7 +3,6 @@ using Dwarf_sMagicShop.Core.Abstractions;
 using Dwarf_sMagicShop.Core.Database;
 using Dwarf_sMagicShop.Core.ErrorsHelpers;
 using Dwarf_sMagicShop.Core.Extensions;
-using Dwarf_sMagicShop.Core.MediatRRequests.MagicArtefacts;
 using Dwarf_sMagicShop.Core.Messages;
 using Dwarf_sMagicShop.Core.Validators;
 using Dwarf_sMagicShop.Crafters.Application.FileProvider;
@@ -11,6 +10,7 @@ using Dwarf_sMagicShop.Crafters.Application.MagicArtefacts.Update.Info;
 using Dwarf_sMagicShop.Crafters.Application.UploadFiles;
 using Dwarf_sMagicShop.Crafters.Application.Validators;
 using Dwarf_sMagicShop.Crafters.Domain.Models;
+using Dwarfs_Magic_Shop.Shared.Contracts.MediatRRequests.MagicArtefacts;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
