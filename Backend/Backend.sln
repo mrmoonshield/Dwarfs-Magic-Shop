@@ -62,7 +62,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwarf-sMagicShop.Accounts.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwarf-sMagicShop.Accounts.Application", "src\Acсounts\Dwarf-sMagicShop.Accounts.Application\Dwarf-sMagicShop.Accounts.Application.csproj", "{FF04C6C7-CF9B-492B-A4D3-BE6894F72C53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwarfs-Magic-Shop.Contracts", "src\Dwarfs-Magic-Shop.Contracts\Dwarfs-Magic-Shop.Contracts.csproj", "{8EB7363E-0B93-462D-84AC-E8EFDD419639}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dwarfs-Magic-Shop.Shared.Contracts", "src\Dwarfs-Magic-Shop.Shared.Contracts\Dwarfs-Magic-Shop.Shared.Contracts.csproj", "{CFF7E4BC-6F07-43A8-BA87-92C82A0AC53D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -126,10 +126,10 @@ Global
 		{FF04C6C7-CF9B-492B-A4D3-BE6894F72C53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF04C6C7-CF9B-492B-A4D3-BE6894F72C53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF04C6C7-CF9B-492B-A4D3-BE6894F72C53}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8EB7363E-0B93-462D-84AC-E8EFDD419639}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8EB7363E-0B93-462D-84AC-E8EFDD419639}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8EB7363E-0B93-462D-84AC-E8EFDD419639}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8EB7363E-0B93-462D-84AC-E8EFDD419639}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFF7E4BC-6F07-43A8-BA87-92C82A0AC53D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFF7E4BC-6F07-43A8-BA87-92C82A0AC53D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFF7E4BC-6F07-43A8-BA87-92C82A0AC53D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFF7E4BC-6F07-43A8-BA87-92C82A0AC53D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -147,7 +147,7 @@ Global
 		{287ECA04-E4FA-4B81-9F6C-5EFC463ED9A5} = {8824C6A7-BA4F-4A33-AA0E-CD6CBA9F6530}
 		{F0F3EC0D-535C-443C-9EAC-EEF609E804F6} = {8824C6A7-BA4F-4A33-AA0E-CD6CBA9F6530}
 		{FF04C6C7-CF9B-492B-A4D3-BE6894F72C53} = {8824C6A7-BA4F-4A33-AA0E-CD6CBA9F6530}
-		{8EB7363E-0B93-462D-84AC-E8EFDD419639} = {8E84CB3A-3F44-4AC6-9F31-630B064C14A0}
+		{CFF7E4BC-6F07-43A8-BA87-92C82A0AC53D} = {8E84CB3A-3F44-4AC6-9F31-630B064C14A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A504EF4B-03BD-484D-BC1E-E5EFC8A86A46}
