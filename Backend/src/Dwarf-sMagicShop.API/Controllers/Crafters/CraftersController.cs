@@ -34,22 +34,6 @@ public class CraftersController : BaseController
 		this.logger = logger;
 	}
 
-	[Permission(Permissions.CREATE_CRAFTER)]
-	[HttpPost]
-	public async Task<ActionResult<Guid>> Create(
-		[FromServices] CreateCrafterHandler crafterHandler,
-		[FromBody] CreateCrafterRequest request,
-		CancellationToken cancellationToken = default)
-	{
-		var result = await crafterHandler.ExecuteAsync(request, cancellationToken);
-
-		if (result.IsFailure)
-			return result.Error.ToResponse();
-
-		logger.LogInformation("Crafter {id} created", result.Value.Id.Value);
-		return Ok(Envelope.Ok(result.Value.Id.Value));
-	}
-
 	[Permission(Permissions.UPDATE_CRAFTER)]
 	[HttpPut("{id:guid}/main-info")]
 	public async Task<ActionResult<Guid>> UpdateMainInfo(

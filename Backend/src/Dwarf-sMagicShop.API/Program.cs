@@ -33,7 +33,7 @@ builder.Services
 	.AddApplicationSpecies()
 	.AddInfrastructureSpecies(builder.Configuration)
 	.AddApplicationAccounts()
-	.AddInfrastructureAccounts();
+	.AddInfrastructureAccounts(builder.Configuration);
 
 builder
 	.AddInfrastructureCraftersBuilder()

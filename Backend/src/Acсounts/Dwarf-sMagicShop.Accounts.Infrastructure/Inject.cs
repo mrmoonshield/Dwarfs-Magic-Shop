@@ -1,11 +1,13 @@
 ﻿using Dwarf_sMagicShop.Accounts.Application;
 using Dwarf_sMagicShop.Accounts.Application.Abstracts;
 using Dwarf_sMagicShop.Accounts.Application.Check;
+using Dwarf_sMagicShop.Accounts.Application.MassTransitBuses;
 using Dwarf_sMagicShop.Accounts.Domain.Models;
 using Dwarf_sMagicShop.Accounts.Domain.Settings;
 using Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts;
 using Dwarf_sMagicShop.Accounts.Infrastructure.Providers;
 using Dwarf_sMagicShop.Accounts.Infrastructure.Repositories;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -17,7 +19,7 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure;
 
 public static class Inject
 {
-	public static IServiceCollection AddInfrastructureAccounts(this IServiceCollection services)
+	public static IServiceCollection AddInfrastructureAccounts(this IServiceCollection services, IConfiguration configuration)
 	{
 		services
 			.AddIdentity()
@@ -27,7 +29,8 @@ public static class Inject
 			.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>()
 			.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>()
 			.AddAuthorization()
-			.AddSingleton<AccountsSeeder>();
+			.AddSingleton<AccountsSeeder>()
+			.AddMassTransitConfiguration(configuration);
 
 		return services;
 	}
@@ -73,5 +76,27 @@ public static class Inject
 				options.TokenValidationParameters = JwtParametersFactory
 				.GetTokenValidationParameters(jwtSettings, true);
 			});
+	}
+
+	private static IServiceCollection AddMassTransitConfiguration(
+		this IServiceCollection services,
+		IConfiguration configuration)
+	{
+		return services.AddMassTransit<IAccountsMassTransitBus>(a =>
+		{
+			a.SetKebabCaseEndpointNameFormatter();
+
+			a.UsingRabbitMq((context, cfg) =>
+			{
+				cfg.Host(new Uri(configuration["RabbitMQ:Host"]!), hconfig =>
+				{
+					hconfig.Username(configuration["RabbitMQ:Username"]!);
+					hconfig.Password(configuration["RabbitMQ:Password"]!);
+				});
+
+				cfg.Durable = true;
+				cfg.ConfigureEndpoints(context);
+			});
+		});
 	}
 }

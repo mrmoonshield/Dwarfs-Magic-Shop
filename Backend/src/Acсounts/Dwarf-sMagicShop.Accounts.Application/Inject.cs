@@ -16,8 +16,7 @@ public static class Inject
 			.AddUnitResultHandlersAccounts()
 			.AddQueryHandlersAccounts()
 			.AddScoped<ExistingAccountValidator>()
-			.AddValidatorsFromAssembly(typeof(Inject).Assembly)
-			.AddConsumers();
+			.AddValidatorsFromAssembly(typeof(Inject).Assembly);
 	}
 
 	public static IServiceCollection AddResultHandlersAccounts(this IServiceCollection services)
@@ -51,18 +50,5 @@ public static class Inject
 						typeof(IQueryHandler<,,>)))
 					.AsSelfWithInterfaces()
 					.WithScopedLifetime());
-	}
-
-	private static IServiceCollection AddConsumers(this IServiceCollection services)
-	{
-		return services.AddMassTransit(x =>
-		{
-			x.AddConsumer<CreateCrafterAccountHandler>();
-
-			x.UsingInMemory((context, cfg) =>
-			{
-				cfg.ConfigureEndpoints(context);
-			});
-		});
 	}
 }

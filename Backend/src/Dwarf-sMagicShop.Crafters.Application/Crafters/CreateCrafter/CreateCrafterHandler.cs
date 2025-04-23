@@ -1,55 +1,32 @@
-﻿using CSharpFunctionalExtensions;
-using Dwarf_sMagicShop.Core.Abstractions;
-using Dwarf_sMagicShop.Core.ErrorsHelpers;
-using Dwarf_sMagicShop.Core.Extensions;
-using Dwarf_sMagicShop.Crafters.Domain.Models;
-using Dwarfs_Magic_Shop.Shared.Contracts.RabbitMQ;
-using FluentValidation;
+﻿using Dwarf_sMagicShop.Crafters.Domain.Models;
+using Dwarfs_Magic_Shop.Shared.Contracts.MassTransit;
 using MassTransit;
 
 namespace Dwarf_sMagicShop.Crafters.Application.Crafters.CreateCrafter;
 
-public class CreateCrafterHandler : IResultHandler<Crafter, CreateCrafterRequest>
+public class CreateCrafterHandler(ICrafterRepository crafterRepository)
+	: IConsumer<CrafterAccountCreatedEvent>
 {
-	private readonly ICrafterRepository crafterRepository;
-	private readonly IValidator<CreateCrafterRequest> validator;
-	private readonly IPublishEndpoint publishEndpoint;
-
-	public CreateCrafterHandler(
-		ICrafterRepository crafterRepository,
-		IValidator<CreateCrafterRequest> validator,
-		IPublishEndpoint publishEndpoint)
+	public async Task Consume(ConsumeContext<CrafterAccountCreatedEvent> context)
 	{
-		this.crafterRepository = crafterRepository;
-		this.validator = validator;
-		this.publishEndpoint = publishEndpoint;
-	}
-
-	public async Task<Result<Crafter, ErrorsList>> ExecuteAsync(CreateCrafterRequest request, CancellationToken cancellationToken)
-	{
-		var validationResult = validator.Validate(request);
-
-		if (!validationResult.IsValid)
-			return validationResult.ToErrorsList();
-
-		var nicknameResult = Nickname.Create(request.nickname);
-		if (nicknameResult.IsFailure)
-			return nicknameResult.ToErrorsList();
-
-		var existCrafterResult = await crafterRepository.GetByNicknameAsync(nicknameResult.Value, cancellationToken);
-
-		if (existCrafterResult.IsSuccess)
-			return Errors.ValueIsInvalid("Nickname").ToErrorsList();
-
-		var crafterID = CrafterID.NewCrafterID;
+		var request = context.Message;
+		var nicknameResult = Nickname.Create(request.UserName);
+		var crafterID = CrafterID.Create(request.CrafterId);
 		var crafterResult = Crafter.Create(crafterID, nicknameResult.Value);
+		await crafterRepository.AddAsync(crafterResult.Value, context.CancellationToken);
+	}
+}
 
-		if (crafterResult.IsFailure)
-			return crafterResult.ToErrorsList();
-
-		await publishEndpoint.Publish(new CrafterCreatedEvent(crafterID.Value), cancellationToken);
-		return Errors.ValueIsInvalid("Nickname").ToErrorsList();
-		var result = await crafterRepository.AddAsync(crafterResult.Value, cancellationToken);
-		return result.Value;
+public class CreateCrafterHandlerDefinition: ConsumerDefinition<CreateCrafterHandler>
+{
+	protected override void ConfigureConsumer(
+		IReceiveEndpointConfigurator endpointConfigurator, 
+		IConsumerConfigurator<CreateCrafterHandler> consumerConfigurator, 
+		IRegistrationContext context)
+	{
+		endpointConfigurator.UseMessageRetry(a =>
+		{
+			a.Incremental(5, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+		});
 	}
 }

@@ -4,8 +4,11 @@ using Dwarf_sMagicShop.Accounts.Application.Refresh;
 using Dwarf_sMagicShop.Accounts.Application.Requests;
 using Dwarf_sMagicShop.Accounts.Application.UpdateCrafter;
 using Dwarf_sMagicShop.Accounts.Domain.Attributes;
+using Dwarf_sMagicShop.Accounts.Domain.Models;
 using Dwarf_sMagicShop.API.Extensions;
+using Dwarf_sMagicShop.API.Response;
 using Dwarf_sMagicShop.Core;
+using Dwarf_sMagicShop.Crafters.Application.Crafters.CreateCrafter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -80,6 +83,21 @@ public class AccountsController : BaseController
 			return result.Error.ToResponse();
 
 		logger.LogInformation("Crafter {id} updated", id);
+		return Ok(result.Value);
+	}
+
+	[Permission(Permissions.CREATE_CRAFTER)]
+	[HttpPost("create-crafters")]
+	public async Task<ActionResult<Guid>> CreateCrafter(
+	[FromServices] CreateCrafterAccountHandler crafterAccountHandler,
+	CancellationToken cancellationToken = default)
+	{
+		var result = await crafterAccountHandler.ExecuteAsync(HttpContext.User, cancellationToken);
+
+		if (result.IsFailure)
+			return result.Error.ToResponse();
+
+		logger.LogInformation("Crafter {id} created", result.Value);
 		return Ok(result.Value);
 	}
 }

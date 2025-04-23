@@ -52,7 +52,7 @@ public class AccountRepository(AccountDbContext accountDbContext) : IAccountRepo
 		return permissions!;
 	}
 
-	public async Task<Result<User, Error>> GetUserAsync(string userName, CancellationToken cancellationToken)
+	public async Task<Result<User, Error>> GetUserByNameAsync(string userName, CancellationToken cancellationToken)
 	{
 		var user = await accountDbContext.Users
 			.Where(a => a.UserName == userName)
@@ -63,6 +63,21 @@ public class AccountRepository(AccountDbContext accountDbContext) : IAccountRepo
 
 		if (user == null)
 			return Errors.NotFound(userName);
+
+		return user;
+	}
+
+	public async Task<Result<User, Error>> GetUserByIdAsync(string userId, CancellationToken cancellationToken)
+	{
+		var user = await accountDbContext.Users
+			.Where(a => a.Id.ToString() == userId)
+			.Include(a => a.Role)
+			.ThenInclude(a => a.RolePermissions)
+			.ThenInclude(a => a.Permission)
+			.FirstOrDefaultAsync(cancellationToken);
+
+		if (user == null)
+			return Errors.NotFound(userId);
 
 		return user;
 	}

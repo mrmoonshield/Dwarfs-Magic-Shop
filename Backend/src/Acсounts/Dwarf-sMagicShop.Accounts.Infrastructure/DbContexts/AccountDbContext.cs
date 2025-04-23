@@ -1,5 +1,6 @@
 ﻿using Dwarf_sMagicShop.Accounts.Domain.Models;
 using Dwarf_sMagicShop.Core;
+using Dwarf_sMagicShop.Core.Messages;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts
 		public DbSet<Permission> Permissions => Set<Permission>();
 		public DbSet<CrafterAccount> CrafterAccounts => Set<CrafterAccount>();
 		public DbSet<RefreshSession> RefreshSessions => Set<RefreshSession>();
+		public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
@@ -37,6 +39,7 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts
 			builder.Entity<IdentityUserRole<Guid>>().ToTable("user_roles");
 			builder.Entity<CrafterAccount>().ToTable("crafter_accounts");
 			builder.Entity<RefreshSession>().ToTable("refresh_sessions");
+			builder.Entity<OutboxMessage>().ToTable("outbox_messages");
 			builder.HasDefaultSchema("accounts");
 
 			builder.Entity<CrafterAccount>()
@@ -88,6 +91,27 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts
 				.HasOne(a => a.User)
 				.WithMany()
 				.HasForeignKey(a => a.UserId);
+
+			builder.Entity<OutboxMessage>()
+				.HasKey(a => a.Id);
+
+			builder.Entity<OutboxMessage>()
+				.Property(a => a.Type)
+				.IsRequired();
+
+			builder.Entity<OutboxMessage>()
+				.Property(a => a.Data)
+				.IsRequired();
+
+			builder.Entity<OutboxMessage>()
+				.Property(a => a.OccuredDate)
+				.HasConversion<long>()
+				.IsRequired();
+
+			builder.Entity<OutboxMessage>()
+				.Property(a => a.ProcessedDate)
+				.HasConversion<long>();
+
 		}
 
 		private ILoggerFactory CreateLoggerFactory()

@@ -20,7 +20,7 @@ public class ExistingAccountValidator : ICustomValidator
 
 	public async Task<Result<User?, Error>> CheckAccountAsync(string userName, CancellationToken cancellationToken)
 	{
-		var userResult = await accountRepository.GetUserAsync(userName, cancellationToken);
+		var userResult = await accountRepository.GetUserByNameAsync(userName, cancellationToken);
 
 		if (userResult.IsFailure)
 			return userResult.Error;
@@ -33,7 +33,7 @@ public class ExistingAccountValidator : ICustomValidator
 		string password,
 		CancellationToken cancellationToken)
 	{
-		var userResult = await accountRepository.GetUserAsync(userName, cancellationToken);
+		var userResult = await accountRepository.GetUserByNameAsync(userName, cancellationToken);
 
 		if (userResult.IsFailure)
 			return Errors.ValueIsInvalid("User name or password");

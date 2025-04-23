@@ -2,7 +2,9 @@
 using Dwarf_sMagicShop.Core.Database;
 using Dwarf_sMagicShop.Core.Messages;
 using Dwarf_sMagicShop.Crafters.Application.Crafters;
+using Dwarf_sMagicShop.Crafters.Application.Crafters.CreateCrafter;
 using Dwarf_sMagicShop.Crafters.Application.FileProvider;
+using Dwarf_sMagicShop.Crafters.Application.MassTransitBuses;
 using Dwarf_sMagicShop.Crafters.Infrastructure;
 using Dwarf_sMagicShop.Crafters.Infrastructure.Backgrounds;
 using Dwarf_sMagicShop.Crafters.Infrastructure.DbContexts;
@@ -70,9 +72,10 @@ public static class Inject
 		this IServiceCollection services,
 		IConfiguration configuration)
 	{
-		return services.AddMassTransit(a =>
+		return services.AddMassTransit<ICraftersMassTransitBus>(a =>
 		{
 			a.SetKebabCaseEndpointNameFormatter();
+			a.AddConsumer<CreateCrafterHandler, CreateCrafterHandlerDefinition>();
 
 			a.UsingRabbitMq((context, cfg) =>
 			{

@@ -1,38 +1,39 @@
 ﻿using CSharpFunctionalExtensions;
 using Dwarf_sMagicShop.Accounts.Application.Abstracts;
-using Dwarf_sMagicShop.Accounts.Domain.Models;
+using Dwarf_sMagicShop.Accounts.Application.MassTransitBuses;
+using Dwarf_sMagicShop.Core;
 using Dwarf_sMagicShop.Core.Abstractions;
 using Dwarf_sMagicShop.Core.ErrorsHelpers;
-using Dwarf_sMagicShop.Core.Extensions;
-using Dwarfs_Magic_Shop.Shared.Contracts.RabbitMQ;
+using Dwarfs_Magic_Shop.Shared.Contracts.MassTransit;
 using MassTransit;
-using Microsoft.AspNetCore.Identity;
+using MassTransit.DependencyInjection;
+using System.Security.Claims;
 
 namespace Dwarf_sMagicShop.Accounts.Application.Create;
 
 public class CreateCrafterAccountHandler(
 	IAccountRepository accountRepository,
-	UserManager<User> userManager) : IUnitResultHandler<string, Guid>, IConsumer<CrafterCreatedEvent>
+	Bind<IAccountsMassTransitBus, IPublishEndpoint> bind,
+	IOutboxRepository outboxRepository) : IUnitResultHandler<ClaimsPrincipal>
 {
-	public async Task Consume(ConsumeContext<CrafterCreatedEvent> context)
+	public async Task<UnitResult<ErrorsList>> ExecuteAsync(ClaimsPrincipal claimsPrincipal, CancellationToken cancellationToken)
 	{
-		//await ExecuteAsync(,context.Message.CrafterId, context.CancellationToken);
-		await Task.CompletedTask;
-	}
+		var userId = claimsPrincipal.FindFirstValue(CustomClaims.USER_ID);
+		var userResult = await accountRepository.GetUserByIdAsync(userId!, cancellationToken);
 
-	public async Task<UnitResult<ErrorsList>> ExecuteAsync(string userId, Guid crafterId, CancellationToken cancellationToken)
-	{
-		var user = await userManager.FindByIdAsync(userId);
+		if (userResult.IsFailure)
+			return Errors.NotFound($"User {userId}").ToErrorsList();
 
-		if (user == null)
-			return Errors.NotFound(userId.ToString()).ToErrorsList();
+		var user = userResult.Value;
+		var crafterAccount = user.CreateCrafterAccount(Guid.NewGuid());
+		//var result = await accountRepository.AddCrafterAccountAsync(crafterAccount, cancellationToken);
 
-		var crafterAccount = user.CreateCrafterAccount(crafterId);
-		var result = await accountRepository.AddCrafterAccountAsync(crafterAccount, cancellationToken);
+		//if (result.IsFailure)
+		//	return result.ToErrorsList();
 
-		if (result.IsFailure)
-			return result.ToErrorsList();
-
+		var crafterId = Guid.NewGuid();
+		//await bind.Value.Publish(new CrafterAccountCreatedEvent(crafterId, user.UserName!), cancellationToken);
+		await outboxRepository.AddAsync(new CrafterAccountCreatedEvent(crafterId, user.UserName!), cancellationToken);
 		return Result.Success<ErrorsList>();
 	}
 }
