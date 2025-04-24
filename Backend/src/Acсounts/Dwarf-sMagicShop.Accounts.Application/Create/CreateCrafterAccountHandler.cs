@@ -14,11 +14,10 @@ namespace Dwarf_sMagicShop.Accounts.Application.Create;
 public class CreateCrafterAccountHandler(
 	IAccountRepository accountRepository,
 	Bind<IAccountsMassTransitBus, IPublishEndpoint> bind,
-	IOutboxRepository outboxRepository) : IUnitResultHandler<ClaimsPrincipal>
+	IOutboxRepository outboxRepository) : IUnitResultHandler<string>
 {
-	public async Task<UnitResult<ErrorsList>> ExecuteAsync(ClaimsPrincipal claimsPrincipal, CancellationToken cancellationToken)
+	public async Task<UnitResult<ErrorsList>> ExecuteAsync(string userId, CancellationToken cancellationToken)
 	{
-		var userId = claimsPrincipal.FindFirstValue(CustomClaims.USER_ID);
 		var userResult = await accountRepository.GetUserByIdAsync(userId!, cancellationToken);
 
 		if (userResult.IsFailure)
@@ -26,10 +25,10 @@ public class CreateCrafterAccountHandler(
 
 		var user = userResult.Value;
 		var crafterAccount = user.CreateCrafterAccount(Guid.NewGuid());
-		//var result = await accountRepository.AddCrafterAccountAsync(crafterAccount, cancellationToken);
+		var result = await accountRepository.AddCrafterAccountAsync(crafterAccount, cancellationToken);
 
-		//if (result.IsFailure)
-		//	return result.ToErrorsList();
+		if (result.IsFailure)
+			return result.Error.ToErrorsList();
 
 		var crafterId = Guid.NewGuid();
 		//await bind.Value.Publish(new CrafterAccountCreatedEvent(crafterId, user.UserName!), cancellationToken);

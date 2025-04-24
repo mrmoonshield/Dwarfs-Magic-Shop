@@ -5,6 +5,7 @@ using Dwarf_sMagicShop.Accounts.Application.MassTransitBuses;
 using Dwarf_sMagicShop.Accounts.Domain.Models;
 using Dwarf_sMagicShop.Accounts.Domain.Settings;
 using Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts;
+using Dwarf_sMagicShop.Accounts.Infrastructure.Jobs;
 using Dwarf_sMagicShop.Accounts.Infrastructure.Providers;
 using Dwarf_sMagicShop.Accounts.Infrastructure.Repositories;
 using MassTransit;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Quartz;
 
 namespace Dwarf_sMagicShop.Accounts.Infrastructure;
 
@@ -30,7 +32,8 @@ public static class Inject
 			.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>()
 			.AddAuthorization()
 			.AddSingleton<AccountsSeeder>()
-			.AddMassTransitConfiguration(configuration);
+			.AddMassTransitConfiguration(configuration)
+			.AddQuartzConfiguration();
 
 		return services;
 	}
@@ -98,5 +101,20 @@ public static class Inject
 				cfg.ConfigureEndpoints(context);
 			});
 		});
+	}
+
+	private static IServiceCollection AddQuartzConfiguration(this IServiceCollection services)
+	{
+		return services
+			.AddQuartz(cfg =>
+			{
+				var jobKey = new JobKey(nameof(OutboxMessagesJob));
+
+				cfg
+				.AddJob<OutboxMessagesJob>(jobKey)
+				.AddTrigger(trigger => trigger.ForJob(jobKey).WithSimpleSchedule(
+					schedule => schedule.WithIntervalInSeconds(1).RepeatForever()));
+			})
+			.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 	}
 }

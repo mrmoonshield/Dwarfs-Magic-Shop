@@ -112,6 +112,12 @@ namespace Dwarf_sMagicShop.Accounts.Infrastructure.DbContexts
 				.Property(a => a.ProcessedDate)
 				.HasConversion<long>();
 
+			builder.Entity<OutboxMessage>()
+				.HasIndex(a => new { a.OccuredDate, a.ProcessedDate })
+				.HasDatabaseName("idx_outbox_messages_unprocessed")
+				.IncludeProperties(a => new { a.Id, a.Type, a.Data })
+				.HasFilter("processed_date IS NULL");
+
 		}
 
 		private ILoggerFactory CreateLoggerFactory()

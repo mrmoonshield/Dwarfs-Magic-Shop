@@ -11,6 +11,7 @@ using Dwarf_sMagicShop.Core;
 using Dwarf_sMagicShop.Crafters.Application.Crafters.CreateCrafter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Dwarf_sMagicShop.API.Controllers.Accounts;
 
@@ -88,16 +89,17 @@ public class AccountsController : BaseController
 
 	[Permission(Permissions.CREATE_CRAFTER)]
 	[HttpPost("create-crafters")]
-	public async Task<ActionResult<Guid>> CreateCrafter(
+	public async Task<IActionResult> CreateCrafter(
 	[FromServices] CreateCrafterAccountHandler crafterAccountHandler,
 	CancellationToken cancellationToken = default)
 	{
-		var result = await crafterAccountHandler.ExecuteAsync(HttpContext.User, cancellationToken);
+		var userId = HttpContext.User.FindFirstValue(CustomClaims.USER_ID);
+		var result = await crafterAccountHandler.ExecuteAsync(userId!, cancellationToken);
 
 		if (result.IsFailure)
 			return result.Error.ToResponse();
 
-		logger.LogInformation("Crafter {id} created", result.Value);
-		return Ok(result.Value);
+		logger.LogInformation("Crafter {id} created", userId);
+		return Ok();
 	}
 }
