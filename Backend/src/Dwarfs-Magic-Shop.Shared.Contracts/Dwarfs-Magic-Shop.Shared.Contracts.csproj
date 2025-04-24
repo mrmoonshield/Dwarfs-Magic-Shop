@@ -7,4 +7,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CSharpFunctionalExtensions" Version="3.4.3" />
+    <PackageReference Include="MediatR" Version="12.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dwarf-sMagicShop.Shared\Dwarf-sMagicShop.Core.csproj" />
+  </ItemGroup>
+
 </Project>

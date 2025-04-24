@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Dwarf-sMagicShop.Shared\Dwarf-sMagicShop.Core.csproj" />
     <ProjectReference Include="..\Dwarf-sMagicShop.Species.Domain\Dwarf-sMagicShop.Species.Domain.csproj" />
+    <ProjectReference Include="..\Dwarfs-Magic-Shop.Shared.Contracts\Dwarfs-Magic-Shop.Shared.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

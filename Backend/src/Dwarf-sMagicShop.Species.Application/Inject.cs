@@ -10,9 +10,8 @@ public static class Inject
 		return services
 			.AddResultHandlersSpecies()
 			.AddUnitResultHandlersSpecies()
-			.AddQueryHandlersSpecies();
-		//.AddScoped<ValidatorsProvider>()
-		//.AddValidatorsFromAssembly(typeof(Inject).Assembly);
+			.AddQueryHandlersSpecies()
+			.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining(typeof(Inject)));
 	}
 
 	public static IServiceCollection AddResultHandlersSpecies(this IServiceCollection services)

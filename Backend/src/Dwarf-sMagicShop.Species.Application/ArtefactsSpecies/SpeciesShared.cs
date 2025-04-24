@@ -6,7 +6,7 @@ namespace Dwarf_sMagicShop.Species.Application.ArtefactsSpecies;
 
 public static class SpeciesShared
 {
-	public static async Task<Result<ArtefactSpecies, Error>> CheckSpecies(
+	public static async Task<Result<ArtefactSpecies, Error>> CheckSpeciesAsync(
 		string name,
 		ISpeciesRepository speciesRepository,
 		CancellationToken cancellationToken)

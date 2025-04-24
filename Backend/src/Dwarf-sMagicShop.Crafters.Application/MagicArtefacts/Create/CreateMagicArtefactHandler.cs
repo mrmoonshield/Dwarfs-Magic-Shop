@@ -10,35 +10,35 @@ using Dwarf_sMagicShop.Crafters.Application.MagicArtefacts.Update.Info;
 using Dwarf_sMagicShop.Crafters.Application.UploadFiles;
 using Dwarf_sMagicShop.Crafters.Application.Validators;
 using Dwarf_sMagicShop.Crafters.Domain.Models;
-using Dwarf_sMagicShop.Species.Application.ArtefactsSpecies;
-using Dwarf_sMagicShop.Species.Domain.Models;
+using Dwarfs_Magic_Shop.Shared.Contracts.MediatRRequests.MagicArtefacts;
+using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Dwarf_sMagicShop.Crafters.Application.MagicArtefacts.Create;
 
 public class CreateMagicArtefactHandler : IResultHandler<MagicArtefact, CreateMagicArtefactCommand, FileUploadCommand>
 {
-	private readonly ISpeciesRepository speciesRepository;
 	private readonly IDatabaseTransactionProvider dbTransactionProvider;
 	private readonly IFileProvider fileProvider;
 	private readonly ILogger<CreateMagicArtefactHandler> logger;
 	private readonly IMessageQueue<string> messageQueue;
 	private readonly ValidatorsProvider validatorsProvider;
+	private readonly IMediator mediator;
 
 	public CreateMagicArtefactHandler(
-		ISpeciesRepository speciesRepository,
 		IDatabaseTransactionProvider dbTransactionProvider,
 		IFileProvider fileProvider,
 		ILogger<CreateMagicArtefactHandler> logger,
 		IMessageQueue<string> messageQueue,
-		ValidatorsProvider validatorsProvider)
+		ValidatorsProvider validatorsProvider,
+		IMediator mediator)
 	{
-		this.speciesRepository = speciesRepository;
 		this.dbTransactionProvider = dbTransactionProvider;
 		this.fileProvider = fileProvider;
 		this.logger = logger;
 		this.messageQueue = messageQueue;
 		this.validatorsProvider = validatorsProvider;
+		this.mediator = mediator;
 	}
 
 	public async Task<Result<MagicArtefact, ErrorsList>> ExecuteAsync(
@@ -79,23 +79,22 @@ public class CreateMagicArtefactHandler : IResultHandler<MagicArtefact, CreateMa
 			if (!requestValidationResult.IsValid)
 				return requestValidationResult.ToErrorsList();
 
-			ArtefactSpeciesID artefactSpeciesID = ArtefactSpeciesID.EmptyArtefactSpeciesID;
+			Guid? speciesGuid = null;
 
 			if (artefactCommand.UpdateRequest.Species != null)
 			{
-				var checkSpeciesResult = await SpeciesShared.CheckSpecies(
-					artefactCommand.UpdateRequest.Species,
-					speciesRepository,
-					cancellationToken);
+				var speciesGuidResult = await mediator.Send(new GetSpeciesGuidRequest(
+								artefactCommand.UpdateRequest.Species),
+								cancellationToken);
 
-				if (checkSpeciesResult.IsFailure)
-					return checkSpeciesResult.ToErrorsList();
+				if (speciesGuidResult.IsFailure)
+					return speciesGuidResult.Error;
 
-				artefactSpeciesID = checkSpeciesResult.Value.Id;
+				speciesGuid = speciesGuidResult.Value;
 			}
 
 			createArtefactResult.Value.UpdateInfo(
-				artefactSpeciesID.Value,
+				speciesGuid,
 				artefactCommand.UpdateRequest.Effect,
 				artefactCommand.UpdateRequest.RareType,
 				artefactCommand.UpdateRequest.Location,
