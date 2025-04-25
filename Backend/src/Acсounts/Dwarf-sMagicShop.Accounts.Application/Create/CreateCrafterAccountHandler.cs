@@ -1,13 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using Dwarf_sMagicShop.Accounts.Application.Abstracts;
 using Dwarf_sMagicShop.Accounts.Application.MassTransitBuses;
-using Dwarf_sMagicShop.Core;
 using Dwarf_sMagicShop.Core.Abstractions;
 using Dwarf_sMagicShop.Core.ErrorsHelpers;
 using Dwarfs_Magic_Shop.Shared.Contracts.MassTransit;
 using MassTransit;
 using MassTransit.DependencyInjection;
-using System.Security.Claims;
 
 namespace Dwarf_sMagicShop.Accounts.Application.Create;
 
@@ -31,8 +29,8 @@ public class CreateCrafterAccountHandler(
 			return result.Error.ToErrorsList();
 
 		var crafterId = Guid.NewGuid();
-		//await bind.Value.Publish(new CrafterAccountCreatedEvent(crafterId, user.UserName!), cancellationToken);
-		await outboxRepository.AddAsync(new CrafterAccountCreatedEvent(crafterId, user.UserName!), cancellationToken);
+		await bind.Value.Publish(new CrafterAccountCreatedEvent(crafterId, user.UserName!), cancellationToken);
+		//await outboxRepository.AddAsync(new CrafterAccountCreatedEvent(crafterId, user.UserName!), cancellationToken);
 		return Result.Success<ErrorsList>();
 	}
 }
